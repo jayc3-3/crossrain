@@ -32,11 +32,11 @@ instructionfont = pygame.font.Font('./PublicPixel.ttf', 15)
 roomfont = pygame.font.Font('./PublicPixel.ttf', 40)
 fpsfont = pygame.font.Font('./PublicPixel.ttf', 35)
 pygame.display.set_caption("Crossrain")
-titlesurface = titlefont.render("Crossrain", True, (255, 255, 255))
-startsurface = startfont.render("Start", True, (255, 255, 255))
-selectsurface = startfont.render(">", True, (255, 255, 255))
-instructionsurface = instructionfont.render("Enter to start. WASD to move", True, (255, 255, 255))
-versionsurface = versionfont.render("v0.1.1", True, (255, 255, 255))
+titlesurface = titlefont.render("Crossrain", False, (255, 255, 255))
+startsurface = startfont.render("Start", False, (255, 255, 255))
+selectsurface = startfont.render(">", False, (255, 255, 255))
+instructionsurface = instructionfont.render("Enter to start. WASD to move", False, (255, 255, 255))
+versionsurface = versionfont.render("v0.1.2", False, (255, 255, 255))
 
 async def main():
     running = True
@@ -88,6 +88,9 @@ async def main():
             selectx = 550
             selecty = 295
             if pygame.key.get_pressed()[pygame.K_RETURN]:
+                zombie1 = False
+                zombie2 = False
+                enemies = 0
                 room = 1
             
 
