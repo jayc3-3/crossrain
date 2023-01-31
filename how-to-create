@@ -1,0 +1,3 @@
+Have python3 and pyinstaller installed
+Use the cd command to go to the directory where the main .py file is
+Run the "pyinstaller --onefile --name Crossrain --clean --noconsole --icon icon.ico main.py" command in the console
