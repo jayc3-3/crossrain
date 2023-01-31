@@ -1,3 +1,9 @@
+Windows, Mac & Linux:
 Have python3 and pyinstaller installed
 Use the cd command to go to the directory where the main .py file is
 Run the "pyinstaller --onefile --name Crossrain --clean --noconsole --icon icon.ico main.py" command in the console
+
+Web:
+Have python3 and pygbag installed
+Run the "pyqbag 'path to main.py'" command in the console
+Run "pygbag --package (pack_name) --title (app_title) --version (app_ver) --html --build --archive 'path to main.py'" in the console
