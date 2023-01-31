@@ -18,7 +18,7 @@ wf1 = WallFront1()
 
 pygame.init()
 bgc = (66, 40, 53)
-actualscreen = pygame.display.set_mode((1280, 720), pygame.RESIZABLE)
+actualscreen = pygame.display.set_mode((1280, 720), pygame.RESIZABLE|pygame.SCALED)
 drawscreen = actualscreen.copy()
 clock = pygame.time.Clock()
 width = pygame.display.Info().current_w
@@ -124,6 +124,25 @@ async def main():
                 zombie1y = 150
                 zombie2x = 1116
                 zombie2y = 150
+                zombie1 = True
+                zombie2 = True
+            elif room == 3:
+                roomcompleted = False
+                room = 4
+                enemies = 1
+                playerweapon = 1
+                zombie1x = 100
+                zombie1y = 600
+                zombie1 = True
+            elif room == 4:
+                roomcompleted = False
+                room = 5
+                enemies = 2
+                playerweapon = 1
+                zombie1x = 400
+                zombie1y = 600
+                zombie2x = 800
+                zombie2y = 600
                 zombie1 = True
                 zombie2 = True
                 
