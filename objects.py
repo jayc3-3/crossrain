@@ -1,5 +1,8 @@
 import pygame
 
+class WindowIcon():
+    def __init__(self):
+        self.image = pygame.image.load('./Sprites/icon.png')
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
