@@ -1,6 +1,7 @@
 import asyncio
 import pygame
 import math
+from objects import WindowIcon
 from objects import Player
 from objects import WoodenSword
 from objects import ZombieOne
@@ -17,24 +18,29 @@ wf1 = WallFront1()
 # Do init here and load any assets right now to avoid lag at runtime or network errors.
 
 pygame.init()
-bgc = (66, 40, 53)
-actualscreen = pygame.display.set_mode((1280, 720), pygame.RESIZABLE|pygame.SCALED)
-drawscreen = actualscreen.copy()
-clock = pygame.time.Clock()
 width = pygame.display.Info().current_w
 height = pygame.display.Info().current_h
+bgc = (66, 40, 53)
+pygame.display.set_icon(WindowIcon().image)
+actualscreen = pygame.display.set_mode((1280, 720), pygame.RESIZABLE)
+drawscreen = actualscreen.copy()
+clock = pygame.time.Clock()
 titlefont = pygame.font.Font('./PublicPixel.ttf', 75)
 startfont = pygame.font.Font('./PublicPixel.ttf', 25)
 versionfont = pygame.font.Font('./PublicPixel.ttf', 20)
+instructionfont = pygame.font.Font('./PublicPixel.ttf', 15)
 roomfont = pygame.font.Font('./PublicPixel.ttf', 40)
 fpsfont = pygame.font.Font('./PublicPixel.ttf', 35)
 pygame.display.set_caption("Crossrain")
 titlesurface = titlefont.render("Crossrain", True, (255, 255, 255))
 startsurface = startfont.render("Start", True, (255, 255, 255))
-versionsurface = versionfont.render("v0.1.0", True, (255, 255, 255))
+selectsurface = startfont.render(">", True, (255, 255, 255))
+instructionsurface = instructionfont.render("Enter to start. WASD to move", True, (255, 255, 255))
+versionsurface = versionfont.render("v0.1.1", True, (255, 255, 255))
 startrect = startsurface.get_rect()
 startrect.centerx = actualscreen.get_rect().centerx
 startrect.centery = int(height/2.5)
+selectrect = startsurface.get_rect()
 
 async def main():
     running = True
@@ -60,26 +66,37 @@ async def main():
     zombie2y = 0
     weaponx = 0
     weapony = 0
+    selector = 1
     
     while True:
         drawscreen.fill(bgc)
         mousex, mousey = pygame.mouse.get_pos()
-        weaponx, weapony = mousex, mousey
-        relx, rely = (mousex - playerx), (mousey - playery)
+        #weaponx, weapony = mousex, mousey
+        #relx, rely = (mousex - playerx), (mousey - playery)
         clock.tick()
         fps = round(clock.get_fps())
         fpsstr = str(fps)
         fpstext = "FPS:" + fpsstr
         DeltaTime = clock.tick(60) / 1000
         roomtext = "Room:" + str(room)
-        
-        wrotang = int(math.degrees(math.atan2(-rely, relx)) - 90)
+
+        #wrotang = int(math.degrees(math.atan2(-rely, relx)) - 90)
 
         fpssurface = fpsfont.render(fpstext, False, (255, 255, 255))
         roomsurface = roomfont.render(roomtext, False, (255, 255, 255))
-        roomrect = roomsurface.get_rect()
-        roomrect.centerx = int(width/1.15)
+        roomrect = roomsurface.get_rect(topleft=(width/1.5, height/25))
+        roomrect.centerx = int(width/1.5)
         roomrect.centery = int(height/25)
+
+        #if pygame.key.get_pressed()[pygame.K_w]:
+            #Selector stuff here
+            
+        if selector == 1:
+            selectrect.centerx = int(width/2.5)
+            selectrect.centery = int(height/2.525)
+            if pygame.key.get_pressed()[pygame.K_RETURN]:
+                room = 1
+            
 
         if weaponx < playerx-82:
             weaponx = playerx-82
@@ -146,6 +163,8 @@ async def main():
                 zombie2y = 600
                 zombie1 = True
                 zombie2 = True
+            elif room == 5:
+                running = False
                 
         elif roomcompleted == False:
             if enemies == 0:
@@ -173,11 +192,50 @@ async def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-            elif event.type == pygame.MOUSEBUTTONDOWN:
-                if startrect.collidepoint((mousex, mousey)):
-                    room = 1
         
         if not room == 0:
+            if pygame.key.get_pressed()[pygame.K_w]:
+                if pygame.key.get_pressed()[pygame.K_a]:
+                    weaponx, weapony = ((playerx - 100), (playery - 100))
+                    wrotang = 45
+                elif pygame.key.get_pressed()[pygame.K_d]:
+                    weaponx, weapony = ((playerx + 100), (playery - 100))
+                    wrotang = -45
+                else:
+                    weaponx, weapony = (playerx, (playery - 100))
+                    wrotang = 0
+            elif pygame.key.get_pressed()[pygame.K_s]:
+                if pygame.key.get_pressed()[pygame.K_a]:
+                    weaponx, weapony = ((playerx - 100), (playery + 100))
+                    wrotang = 180-45
+                elif pygame.key.get_pressed()[pygame.K_d]:
+                    weaponx, weapony = ((playerx + 100), (playery + 100))
+                    wrotang = 180+45
+                else:
+                    weaponx, weapony = (playerx, (playery + 100))
+                    wrotang = 180
+            elif pygame.key.get_pressed()[pygame.K_a]:
+                if pygame.key.get_pressed()[pygame.K_w]:
+                    weaponx, weapony = ((playerx - 100), (playery - 100))
+                    wrotang = 45
+                elif pygame.key.get_pressed()[pygame.K_s]:
+                    weaponx, weapony = ((playerx - 100), (playery + 100))
+                    wrotang = 180-45
+                else:
+                    weaponx, weapony = ((playerx - 100), (playery))
+                    wrotang = 90
+            elif pygame.key.get_pressed()[pygame.K_d]:
+                if pygame.key.get_pressed()[pygame.K_w]:
+                    weaponx, weapony = ((playerx + 100), (playery - 100))
+                    wrotang = 45
+                elif pygame.key.get_pressed()[pygame.K_s]:
+                    weaponx, weapony = ((playerx + 100), (playery + 100))
+                    wrotang = 180+45
+                else:
+                    weaponx, weapony = ((playerx + 100), (playery))
+                    wrotang = 270
+            
+            
             if pygame.key.get_pressed()[pygame.K_w]:
                 playery -= int(750 * DeltaTime)
         
@@ -193,14 +251,14 @@ async def main():
                 playerflipped = pygame.transform.flip(player.image, False, False)
         
         if zombie1 == True:
-            if playerx < zombie1x-50:
-                zombie1x -= 5
-            elif playerx > zombie1x+50:
-                zombie1x += 5
-            if playery < zombie1y-50:
-                zombie1y -=5
-            elif playery > zombie1y+50:
-                zombie1y += 5
+            if playerx < zombie1x-25:
+                zombie1x -= int(315 * DeltaTime)
+            elif playerx > zombie1x+25:
+                zombie1x += int(315 * DeltaTime)
+            if playery < zombie1y-25:
+                zombie1y -= int(315 * DeltaTime)
+            elif playery > zombie1y+25:
+                zombie1y += int(315 * DeltaTime)
             if zombie1rect.colliderect(wswordrect):
                 enemies = enemies - 1
                 zombie1 = False
@@ -211,14 +269,14 @@ async def main():
                 playery = 325
                 
         if zombie2 == True:
-            if playerx < zombie2x-50:
-                zombie2x -= 5
-            elif playerx > zombie2x+50:
-                zombie2x += 5
-            if playery < zombie2y-50:
-                zombie2y -=5
-            elif playery > zombie2y+50:
-                zombie2y += 5
+            if playerx < zombie2x-25:
+                zombie2x -= int(315 * DeltaTime)
+            elif playerx > zombie2x+25:
+                zombie2x += int(315 * DeltaTime)
+            if playery < zombie2y-25:
+                zombie2y -= int(315 * DeltaTime)
+            elif playery > zombie2y+25:
+                zombie2y += int(315 * DeltaTime)
             if zombie2rect.colliderect(wswordrect):
                 enemies = enemies - 1
                 zombie2 = False
@@ -250,13 +308,15 @@ async def main():
             drawscreen.blit(zombie2flipped, zombie2rect)
         if not room == 0:
             drawscreen.blit(playerflipped, playerrect)
-            drawscreen.blit(roomsurface, roomrect)
             if room > 1:
                 if playerweapon == 1:
                     drawscreen.blit(woodswordrotated, (weaponx, weapony))
+            drawscreen.blit(roomsurface, roomrect)
         else:
             drawscreen.blit(titlesurface, (300, 150))
             drawscreen.blit(startsurface, startrect)
+            drawscreen.blit(selectsurface, selectrect)
+            drawscreen.blit(instructionsurface, (50, 675))
             drawscreen.blit(versionsurface, (1100, 675))
 
         drawscreen.blit(fpssurface, (35, 15))
