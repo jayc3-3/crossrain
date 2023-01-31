@@ -37,10 +37,6 @@ startsurface = startfont.render("Start", True, (255, 255, 255))
 selectsurface = startfont.render(">", True, (255, 255, 255))
 instructionsurface = instructionfont.render("Enter to start. WASD to move", True, (255, 255, 255))
 versionsurface = versionfont.render("v0.1.1", True, (255, 255, 255))
-startrect = startsurface.get_rect()
-startrect.centerx = actualscreen.get_rect().centerx
-startrect.centery = int(height/2.5)
-selectrect = startsurface.get_rect()
 
 async def main():
     running = True
@@ -84,16 +80,13 @@ async def main():
 
         fpssurface = fpsfont.render(fpstext, False, (255, 255, 255))
         roomsurface = roomfont.render(roomtext, False, (255, 255, 255))
-        roomrect = roomsurface.get_rect(topleft=(width/1.5, height/25))
-        roomrect.centerx = int(width/1.5)
-        roomrect.centery = int(height/25)
 
         #if pygame.key.get_pressed()[pygame.K_w]:
             #Selector stuff here
             
         if selector == 1:
-            selectrect.centerx = int(width/2.5)
-            selectrect.centery = int(height/2.525)
+            selectx = 550
+            selecty = 295
             if pygame.key.get_pressed()[pygame.K_RETURN]:
                 room = 1
             
@@ -164,7 +157,7 @@ async def main():
                 zombie1 = True
                 zombie2 = True
             elif room == 5:
-                running = False
+                room = 0
                 
         elif roomcompleted == False:
             if enemies == 0:
@@ -311,11 +304,11 @@ async def main():
             if room > 1:
                 if playerweapon == 1:
                     drawscreen.blit(woodswordrotated, (weaponx, weapony))
-            drawscreen.blit(roomsurface, roomrect)
+            drawscreen.blit(roomsurface, (950, 15))
         else:
-            drawscreen.blit(titlesurface, (300, 150))
-            drawscreen.blit(startsurface, startrect)
-            drawscreen.blit(selectsurface, selectrect)
+            drawscreen.blit(titlesurface, (300, 125))
+            drawscreen.blit(startsurface, ((640-60), 300))
+            drawscreen.blit(selectsurface, (selectx, selecty))
             drawscreen.blit(instructionsurface, (50, 675))
             drawscreen.blit(versionsurface, (1100, 675))
 
