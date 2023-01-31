@@ -25,12 +25,13 @@ width = pygame.display.Info().current_w
 height = pygame.display.Info().current_h
 titlefont = pygame.font.Font('./PublicPixel.ttf', 75)
 startfont = pygame.font.Font('./PublicPixel.ttf', 25)
+versionfont = pygame.font.Font('./PublicPixel.ttf', 20)
 roomfont = pygame.font.Font('./PublicPixel.ttf', 40)
 fpsfont = pygame.font.Font('./PublicPixel.ttf', 35)
 pygame.display.set_caption("Crossrain")
-print("Game version: 0.1.0")
 titlesurface = titlefont.render("Crossrain", True, (255, 255, 255))
 startsurface = startfont.render("Start", True, (255, 255, 255))
+versionsurface = versionfont.render("v0.1.0", True, (255, 255, 255))
 startrect = startsurface.get_rect()
 startrect.centerx = actualscreen.get_rect().centerx
 startrect.centery = int(height/2.5)
@@ -256,6 +257,7 @@ async def main():
         else:
             drawscreen.blit(titlesurface, (300, 150))
             drawscreen.blit(startsurface, startrect)
+            drawscreen.blit(versionsurface, (1100, 675))
 
         drawscreen.blit(fpssurface, (35, 15))
         actualscreen.blit(pygame.transform.scale(drawscreen, actualscreen.get_rect().size), (0, 0))
