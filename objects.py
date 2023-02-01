@@ -19,6 +19,38 @@ class ZombieTwo(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
         self.image = pygame.image.load('./Sprites/zombie.png')
+class Demon(pygame.sprite.Sprite):
+    def __init__(self):
+        super().__init__()
+        self.image = pygame.image.load('./Sprites/demon.png')
+class DemonTwo(pygame.sprite.Sprite):
+    def __init__(self):
+        super().__init__()
+        self.image = pygame.image.load('./Sprites/demon.png')
+class DemonSpawnOne(pygame.sprite.Sprite):
+    def __init__(self):
+        super().__init__()
+        self.image = pygame.image.load('./Sprites/demonspawn.png')
+class DemonSpawnTwo(pygame.sprite.Sprite):
+    def __init__(self):
+        super().__init__()
+        self.image = pygame.image.load('./Sprites/demonspawn.png')
+class DemonSpawnThree(pygame.sprite.Sprite):
+    def __init__(self):
+        super().__init__()
+        self.image = pygame.image.load('./Sprites/demonspawn.png')
+class DemonSpawnFour(pygame.sprite.Sprite):
+    def __init__(self):
+        super().__init__()
+        self.image = pygame.image.load('./Sprites/demonspawn.png')
+class DemonSpawnFive(pygame.sprite.Sprite):
+    def __init__(self):
+        super().__init__()
+        self.image = pygame.image.load('./Sprites/demonspawn.png')
+class DemonSpawnSix(pygame.sprite.Sprite):
+    def __init__(self):
+        super().__init__()
+        self.image = pygame.image.load('./Sprites/demonspawn.png')
 class WallFront1:
     def __init__(self):
         super().__init__()
