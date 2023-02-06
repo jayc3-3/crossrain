@@ -1,797 +1,863 @@
 import asyncio
 import pygame
 import time
+
 from objects import WindowIcon
-from objects import Player
-from objects import WoodenSword
+from objects import WallOne
+from objects import WallTwo
+from objects import WallThree
+from objects import WallFour
+from objects import WallFive
+from objects import Stair
+from objects import Wizard
+from objects import Weapon
 from objects import ZombieOne
 from objects import ZombieTwo
-from objects import Demon
+from objects import DemonOne
 from objects import DemonTwo
-from objects import DemonSpawnOne
-from objects import DemonSpawnTwo
-from objects import DemonSpawnThree
-from objects import DemonSpawnFour
-from objects import DemonSpawnFive
-from objects import DemonSpawnSix
-from objects import WallFront1
-
-# Try explicitly to declare all your globals at once to facilitate compilation later.
-player = Player()
-wsword = WoodenSword()
-zomb1 = ZombieOne()
-zomb2 = ZombieTwo()
-dem = Demon()
-dem2 = DemonTwo()
-dems1 = DemonSpawnOne()
-dems2 = DemonSpawnTwo()
-dems3 = DemonSpawnThree()
-dems4 = DemonSpawnFour()
-dems5 = DemonSpawnFive()
-dems6 = DemonSpawnSix()
-wf1 = WallFront1()
-
-# Do init here and load any assets right now to avoid lag at runtime or network errors.
+from objects import DemonspawnOne
+from objects import DemonspawnTwo
+from objects import DemonspawnThree
+from objects import DemonspawnFour
+from objects import DemonspawnFive
+from objects import DemonspawnSix
 
 pygame.init()
-width = pygame.display.Info().current_w
-height = pygame.display.Info().current_h
-bgc = (66, 40, 53)
+Window = pygame.display.set_mode((960, 540), pygame.RESIZABLE)
+WindowWidth = pygame.display.Info().current_w
+Screen = Window.copy()
+pygame.display.set_caption('Crossrain')
 pygame.display.set_icon(WindowIcon().image)
-actualscreen = pygame.display.set_mode((1280, 720), pygame.RESIZABLE)
-drawscreen = actualscreen.copy()
-clock = pygame.time.Clock()
-titlefont = pygame.font.Font('./PublicPixel.ttf', 75)
-startfont = pygame.font.Font('./PublicPixel.ttf', 25)
-versionfont = pygame.font.Font('./PublicPixel.ttf', 20)
-instructionfont = pygame.font.Font('./PublicPixel.ttf', 15)
-roomfont = pygame.font.Font('./PublicPixel.ttf', 40)
-fpsfont = pygame.font.Font('./PublicPixel.ttf', 35)
-pygame.display.set_caption("Crossrain")
-titlesurface = titlefont.render("Crossrain", False, (255, 255, 255))
-startsurface = startfont.render("Start", False, (255, 255, 255))
-selectsurface = startfont.render(">", False, (255, 255, 255))
-instructionsurface = instructionfont.render("Enter to start, WASD to move/aim", False, (255, 255, 255))
-versionsurface = versionfont.render("v0.1.2", False, (255, 255, 255))
 
-async def main():
-    running = True
-    playerx = 605
-    playery = 325
-    wrotang = 0
-    wrotang = int(wrotang)
-    room = 0
-    roomcompleted = False
-    enemies = 0
-    playerweapon = 0
-    playerflipped = pygame.transform.flip(player.image, False, False)
-    zombie1flipped = pygame.transform.flip(zomb1.image, False, False)
-    zombie2flipped = pygame.transform.flip(zomb2.image, False, False)
-    demflipped = pygame.transform.flip(dem.image, False, False)
-    dem2flipped = pygame.transform.flip(dem2.image, False, False)
-    ds1flipped = pygame.transform.flip(dems1.image, False, False)
-    ds2flipped = pygame.transform.flip(dems2.image, False, False)
-    ds3flipped = pygame.transform.flip(dems3.image, False, False)
-    ds4flipped = pygame.transform.flip(dems4.image, False, False)
-    ds5flipped = pygame.transform.flip(dems5.image, False, False)
-    ds6flipped = pygame.transform.flip(dems6.image, False, False)
-    
-    zombie1 = False
-    zombie2 = False
-    demon = False
-    demon2 = False
-    demonspawn1 = False
-    demonspawn2 = False
-    demonspawn3 = False
-    demonspawn4 = False
-    demonspawn5 = False
-    demonspawn6 = False
-    
-    zombie1x = 0
-    zombie1y = 0
-    zombie2x = 0
-    zombie2y = 0
-    demonx = 0
-    demony = 0
-    demon2x = 0
-    demon2y = 0
-    ds1x = 0
-    ds1y = 0
-    ds2x = 0
-    ds2y = 0
-    ds3x = 0
-    ds3y = 0
-    ds4x = 0
-    ds4y = 0
-    ds5x = 0
-    ds5y = 0
-    ds6x = 0
-    ds6y = 0
-    weaponx = 0
-    weapony = 0
-    selector = 1
-    do_once = 0
-    do_once2 = 0
-    demonspawn = 0
-    demon2spawn = 0
-    start = 0
-    current = 0
-    elapsed = 0
-    start2 = 0
-    current2 = 0
-    elapsed2 = 0
-    
-    while True:
-        drawscreen.fill(bgc)
-        #mousex, mousey = pygame.mouse.get_pos()
-        #weaponx, weapony = mousex, mousey
-        #relx, rely = (mousex - playerx), (mousey - playery)
-        clock.tick()
-        fps = round(clock.get_fps())
-        fpsstr = str(fps)
-        fpstext = "FPS:" + fpsstr
-        DeltaTime = clock.tick(60) / 1000
-        roomtext = "Room:" + str(room)
+Clock = pygame.time.Clock()
 
-        #wrotang = int(math.degrees(math.atan2(-rely, relx)) - 90)
+Font1 = pygame.font.Font('./PublicPixel.ttf', 50)
+Font2 = pygame.font.Font('./PublicPixel.ttf', 25)
+Font3 = pygame.font.Font('./PublicPixel.ttf', 15)
 
-        fpssurface = fpsfont.render(fpstext, False, (255, 255, 255))
-        roomsurface = roomfont.render(roomtext, False, (255, 255, 255))
+Wall1 = WallOne()
+Wall2 = WallTwo()
+Wall3 = WallThree()
+Wall4 = WallFour()
+Wall5 = WallFive()
+Stairs = Stair()
+Player = Wizard()
+Sword = Weapon()
+Zombie1 = ZombieOne()
+Zombie2 = ZombieTwo()
+Demon1 = DemonOne()
+Demon2 = DemonTwo()
+Demonspawn1 = DemonspawnOne()
+Demonspawn2 = DemonspawnTwo()
+Demonspawn3 = DemonspawnThree()
+Demonspawn4 = DemonspawnFour()
+Demonspawn5 = DemonspawnFive()
+Demonspawn6 = DemonspawnSix()
 
-        #if pygame.key.get_pressed()[pygame.K_w]:
-            #Selector stuff here
-        
-        if room == 0:
-            if selector == 1:
-                selectx = 550
-                selecty = 295
-                if pygame.key.get_pressed()[pygame.K_RETURN]:
-                    enemies = 0
-                    room = 1
-            zombie1 = False
-            zombie2 = False
-            demon = False
-            demon2 = False
-            demonspawn1 = False
-            demonspawn2 = False
-            demonspawn3 = False
-            demonspawn4 = False
-            demonspawn5 = False
-            demonspawn6 = False
-            zombie1x = 0
-            zombie1y = 0
-            zombie2x = 0
-            zombie2y = 0
-            demonx = 0
-            demony = 0
-            demon2x = 0
-            demon2y = 0
-            ds1x = 0
-            ds1y = 0
-            ds2x = 0
-            ds2y = 0
-            ds3x = 0
-            ds3y = 0
-            ds4x = 0
-            ds4y = 0
-            ds5x = 0
-            ds5y = 0
-            ds6x = 0
-            ds6y = 0
-            enemies = 0
-            playerweapon = 0
-            do_once = 0
-            do_once2 = 0
-            start = 0
-            current = 0
-            elapsed = 0
-            start2 = 0
-            current2 = 0
-            elapsed2 = 0
-            
-            
+async def Game():
+    Running = True
 
-        if weaponx < playerx-82:
-            weaponx = playerx-82
-        elif weaponx > playerx+82:
-            weaponx = playerx+82
-        
-        if weapony < playery-82:
-            weapony = playery-82
-        elif weapony > playery+82:
-            weapony = playery+82
+    RoomCompleted = False
+    Room = 0
+    Enemies = 0
 
-        zombie1rect = zomb1.image.get_rect(topleft=(zombie1x, zombie1y))
-        zombie2rect = zomb2.image.get_rect(topleft=(zombie2x, zombie2y))
-        demonrect = dem.image.get_rect(topleft=(demonx, demony))
-        demon2rect = dem2.image.get_rect(topleft=(demon2x, demon2y))
-        ds1rect = dems1.image.get_rect(topleft=(ds1x, ds1y))
-        ds2rect = dems2.image.get_rect(topleft=(ds2x, ds2y))
-        ds3rect = dems3.image.get_rect(topleft=(ds3x, ds3y))
-        ds4rect = dems4.image.get_rect(topleft=(ds4x, ds4y))
-        ds5rect = dems5.image.get_rect(topleft=(ds5x, ds5y))
-        ds6rect = dems6.image.get_rect(topleft=(ds6x, ds6y))
-        wswordrect = wsword.image.get_rect(topleft=(weaponx, weapony))
-        playerrect = player.image.get_rect(topleft=(playerx, playery))
-
-        woodswordrotated = pygame.transform.rotate(wsword.image, wrotang)
-
-        if roomcompleted == True:
-            do_once = 0
-            do_once2 = 0
-            start = 0
-            start2 = 0
-            current = 0
-            current2 = 0
-            elapsed = 0
-            elapsed2 = 0
-            if room == 1:
-                roomcompleted = False
-                room = 2
-                enemies = 1
-                playerweapon = 1
-                zombie1x = 605
-                zombie1y = 100
-                zombie1 = True
-            elif room == 2:
-                roomcompleted = False
-                room = 3
-                enemies = 2
-                playerweapon = 1
-                zombie1x = 400
-                zombie1y = 100
-                zombie2x = 800
-                zombie2y = 100
-                zombie1 = True
-                zombie2 = True
-            elif room == 3:
-                roomcompleted = False
-                room = 4
-                enemies = 1
-                playerweapon = 1
-                zombie1x = 100
-                zombie1y = 600
-                zombie1 = True
-            elif room == 4:
-                roomcompleted = False
-                room = 5
-                enemies = 2
-                playerweapon = 1
-                zombie1x = 400
-                zombie1y = 600
-                zombie2x = 800
-                zombie2y = 600
-                zombie1 = True
-                zombie2 = True
-            elif room == 5:
-                roomcompleted = False
-                room = 6
-                enemies = 1
-                playerweapon = 1
-                demonx = 570
-                demony = 100
-                demonspawn = 0
-                demon = True
-            elif room == 6:
-                roomcompleted = False
-                room = 7
-                enemies = 3
-                playerweapon = 1
-                demonx = 570
-                demony = 100
-                zombie1x = 400
-                zombie1y = 600
-                zombie2x = 800
-                zombie2y = 600
-                demonspawn = 0
-                demon = True
-                zombie1 = True
-                zombie2 = True
-            elif room == 7:
-                enemies = 3
-                playerweapon = 1
-                demonx = 50
-                demony = 75
-                zombie1x = 50
-                zombie1y = 600
-                zombie2x = 1100
-                zombie2y = 75
-                demonspawn = 0
-                room = 8
-                time.sleep(0.05)
-                roomcompleted = False
-                demon = True
-                demonspawn1 = False
-                demonspawn2 = False
-                demonspawn3 = False
-                zombie1 = True
-                zombie2 = True
-            elif room == 8:
-                enemies = 3
-                playerweapon = 1
-                demonx = 1100
-                demony = 200
-                zombie1x = 1000
-                zombie1y = 600
-                zombie2x = 950
-                zombie2y = 650
-                demonspawn = 0
-                room = 9
-                time.sleep(0.05)
-                roomcompleted = False
-                demon = True
-                demonspawn1 = False
-                demonspawn2 = False
-                demonspawn3 = False
-                zombie1 = True
-                zombie2 = True
-            elif room == 9:
-                enemies = 4
-                playerweapon = 1
-                demonx = 50
-                demony = 100
-                demon2x = 1100
-                demon2y = 100
-                zombie1x = 150
-                zombie1y = 600
-                zombie2x = 1000
-                zombie2y = 650
-                demonspawn = 0
-                demon2spawn = 0
-                room = 10
-                time.sleep(0.05)
-                roomcompleted = False
-                demon = True
-                demon2 = True
-                demonspawn1 = False
-                demonspawn2 = False
-                demonspawn3 = False
-                demonspawn4 = False
-                demonspawn5 = False
-                demonspawn6 = False
-                zombie1 = True
-                zombie2 = True
-            elif room == 10:
-                room = 0
-
-        elif roomcompleted == False:
-            if enemies == 0:
-                if playerx > 495:
-                    if playerx < 725:
-                        if playery < 0:
-                            playerx = 605
-                            playery = 625
-                            roomcompleted = True
-            elif not enemies == 0:
-                if playery < 0:
-                    playery = 0
-
-        if zombie1 == False:
-            zombie1x = 0
-            zombie1y = 0
-        if zombie2 == False:
-            zombie2x = 0
-            zombie2y = 0
-        if demon == False:
-            demonx = 0
-            demony = 0
-        if demon2 == False:
-            demon2x = 0
-            demon2y = 0
-        if demonspawn1 == False:
-            ds1x = 0
-            ds1y = 0
-        if demonspawn2 == False:
-            ds2x = 0
-            ds2y = 0
-        if demonspawn3 == False:
-            ds3x = 0
-            ds3y = 0
-        if demonspawn4 == False:
-            ds4x = 0
-            ds4y = 0
-        if demonspawn5 == False:
-            ds5x = 0
-            ds5y = 0
-        if demonspawn6 == False:
-            ds6x = 0
-            ds6y = 0
-
-        if playerx > 710:
-            if playery < 80:
-                playerx = 710
-            elif playery < 100:
-                playery = 100
-        elif playerx < 510:
-            if playery < 80:
-                playerx = 510
-            elif playery < 100:
-                playery = 100
-        
+    while Running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                running = False
-        
-        if not room == 0:
+                Running = False
+
+        DeltaTime = Clock.tick(60) / 1000
+
+        FPS = Clock.get_fps()
+        FPSStr = str(round(FPS))
+        FPSText = Font2.render('FPS:'+FPSStr, False, (255, 255, 255))
+
+        if RoomCompleted == True:
+            if Room == 1:
+                Enemies = 1
+                Room = 2
+                Player.X = 480
+                Player.Y = 450
+                Sword.X = 480
+                Sword.Y = 375
+                Sword.Rotation = 0
+                Zombie1.X = 480
+                Zombie1.Y = 75
+                Zombie1.Alive = True
+                RoomCompleted = False
+            elif Room == 2:
+                Enemies = 2
+                Room = 3
+                Player.X = 480
+                Player.Y = 450
+                Sword.X = 480
+                Sword.Y = 375
+                Sword.Rotation = 0
+                Zombie1.X = 305
+                Zombie1.Y = 100
+                Zombie2.X = 655
+                Zombie2.Y = 100
+                Zombie1.Alive = True
+                Zombie2.Alive = True
+                RoomCompleted = False
+            elif Room == 3:
+                Enemies = 1
+                Room = 4
+                Player.X = 480
+                Player.Y = 450
+                Sword.X = 480
+                Sword.Y = 375
+                Sword.Rotation = 0
+                Zombie1.X = 100
+                Zombie1.Y = 475
+                Zombie1.Alive = True
+                RoomCompleted = False
+            elif Room == 4:
+                Enemies = 2
+                Room = 5
+                Player.X = 480
+                Player.Y = 450
+                Sword.X = 480
+                Sword.Y = 375
+                Sword.Rotation = 0
+                Zombie1.X = 305
+                Zombie1.Y = 475
+                Zombie2.X = 655
+                Zombie2.Y = 475
+                Zombie1.Alive = True
+                Zombie2.Alive = True
+                RoomCompleted = False
+            elif Room == 5:
+                Enemies = 1
+                Room = 6
+                Player.X = 480
+                Player.Y = 450
+                Sword.X = 480
+                Sword.Y = 375
+                Sword.Rotation = 0
+                Demon1.X = 480
+                Demon1.Y = 75
+                Demon1.Alive = True
+                RoomCompleted = False
+            elif Room == 6:
+                Enemies = 3
+                Room = 7
+                Player.X = 480
+                Player.Y = 450
+                Sword.X = 480
+                Sword.Y = 375
+                Sword.Rotation = 0
+                Zombie1.X = 305
+                Zombie1.Y = 100
+                Zombie2.X = 655
+                Zombie2.Y = 100
+                Demon1.X = 480
+                Demon1.Y = 75
+                Zombie1.Alive = True
+                Zombie2.Alive = True
+                Demon1.Alive = True
+                RoomCompleted = False
+            elif Room == 7:
+                Enemies = 3
+                Room = 8
+                Player.X = 480
+                Player.Y = 450
+                Sword.X = 480
+                Sword.Y = 375
+                Sword.Rotation = 0
+                Zombie1.X = 250
+                Zombie1.Y = 125
+                Zombie2.X = 250
+                Zombie2.Y = 250
+                Demon1.X = 100
+                Demon1.Y = 75
+                Zombie1.Alive = True
+                Zombie2.Alive = True
+                Demon1.Alive = True
+                RoomCompleted = False
+            elif Room == 8:
+                Enemies = 3
+                Room = 9
+                Player.X = 480
+                Player.Y = 450
+                Sword.X = 480
+                Sword.Y = 375
+                Sword.Rotation = 0
+                Zombie1.X = 710
+                Zombie1.Y = 125
+                Zombie2.X = 710
+                Zombie2.Y = 250
+                Demon1.X = 860
+                Demon1.Y = 75
+                Zombie1.Alive = True
+                Zombie2.Alive = True
+                Demon1.Alive = True
+                RoomCompleted = False
+            elif Room == 9:
+                Enemies = 4
+                Room = 10
+                Player.X = 480
+                Player.Y = 450
+                Sword.X = 480
+                Sword.Y = 375
+                Sword.Rotation = 0
+                Zombie1.X = 305
+                Zombie1.Y = 475
+                Zombie2.X = 655
+                Zombie2.Y = 475
+                Demon1.X = 100
+                Demon1.Y = 75
+                Demon2.X = 860
+                Demon2.Y = 75
+                Zombie1.Alive = True
+                Zombie2.Alive = True
+                Demon1.Alive = True
+                Demon2.Alive = True
+                RoomCompleted = False
+            else:
+                Enemies = 0
+                Room = 0
+
+        if Room == 0:
+            Zombie1.Alive = False
+            Zombie2.Alive = False
+            Demon1.Alive = False
+            Demon2.Alive = False
+            Demonspawn1.Alive = False
+            Demonspawn2.Alive = False
+            Demonspawn3.Alive = False
+            Demonspawn4.Alive = False
+            Demonspawn5.Alive = False
+            Demonspawn6.Alive = False
+            if pygame.key.get_pressed()[pygame.K_RETURN]:
+                Player.X = 480
+                Player.Y = 450
+                Sword.X = 480
+                Sword.Y = 375
+                Sword.Rotation = 0
+                Enemies = 0
+                Room = 1
+                RoomCompleted = False
+
+        if not Room == 0:
             if pygame.key.get_pressed()[pygame.K_w]:
-                if pygame.key.get_pressed()[pygame.K_a]:
-                    wrotang = 45
-                    weaponx, weapony = ((playerx - 100), (playery - 100))
-                elif pygame.key.get_pressed()[pygame.K_d]:
-                    wrotang = -45
-                    weaponx, weapony = ((playerx + 100), (playery - 100))
-                else:
-                    wrotang = 0
-                    weaponx, weapony = (playerx, (playery - 100))
-            elif pygame.key.get_pressed()[pygame.K_s]:
-                if pygame.key.get_pressed()[pygame.K_a]:
-                    wrotang = 180-45
-                    weaponx, weapony = ((playerx - 100), (playery + 100))
-                elif pygame.key.get_pressed()[pygame.K_d]:
-                    wrotang = 180+45
-                    weaponx, weapony = ((playerx + 100), (playery + 100))
-                else:
-                    wrotang = 180
-                    weaponx, weapony = (playerx, (playery + 100))
-            elif pygame.key.get_pressed()[pygame.K_a]:
-                if pygame.key.get_pressed()[pygame.K_w]:
-                    wrotang = 45
-                    weaponx, weapony = ((playerx - 100), (playery - 100))
-                elif pygame.key.get_pressed()[pygame.K_s]:
-                    wrotang = 180-45
-                    weaponx, weapony = ((playerx - 100), (playery + 100))
-                else:
-                    wrotang = 90
-                    weaponx, weapony = ((playerx - 100), (playery))
-            elif pygame.key.get_pressed()[pygame.K_d]:
-                if pygame.key.get_pressed()[pygame.K_w]:
-                    wrotang = 45
-                    weaponx, weapony = ((playerx + 100), (playery - 100))
-                elif pygame.key.get_pressed()[pygame.K_s]:
-                    wrotang = 180+45
-                    weaponx, weapony = ((playerx + 100), (playery + 100))
-                else:
-                    wrotang = 270
-                    weaponx, weapony = ((playerx + 100), (playery))
-            woodswordrotated = pygame.transform.rotate(wsword.image, wrotang)
-            
-            if pygame.key.get_pressed()[pygame.K_w]:
-                playery -= int(750 * DeltaTime)
-        
-            elif pygame.key.get_pressed()[pygame.K_s]:
-                playery += int(750 * DeltaTime)
-        
+                if not pygame.key.get_pressed()[pygame.K_s]:
+                    Player.Y = int(Player.Y - (500 * DeltaTime))
+            if pygame.key.get_pressed()[pygame.K_s]:
+                if not pygame.key.get_pressed()[pygame.K_w]:
+                    Player.Y = int(Player.Y + (500 * DeltaTime))
             if pygame.key.get_pressed()[pygame.K_a]:
-                playerx -= int(750 * DeltaTime)
-                playerflipped = pygame.transform.flip(player.image, True, False)
-        
-            elif pygame.key.get_pressed()[pygame.K_d]:
-                playerx += int(750 * DeltaTime)
-                playerflipped = pygame.transform.flip(player.image, False, False)
-        
-        if zombie1 == True:
-            if playerx < zombie1x-25:
-                zombie1x -= int(315 * DeltaTime)
-            elif playerx > zombie1x+25:
-                zombie1x += int(315 * DeltaTime)
-            if playery < zombie1y-25:
-                zombie1y -= int(315 * DeltaTime)
-            elif playery > zombie1y+25:
-                zombie1y += int(315 * DeltaTime)
-            if zombie1rect.colliderect(wswordrect):
-                enemies = enemies - 1
-                zombie1 = False
-            elif zombie1rect.colliderect(playerrect):
-                enemies = 0
-                room = 0
-                playerx = 605
-                playery = 325
+                if not pygame.key.get_pressed()[pygame.K_d]:
+                    Player.X = int(Player.X - (500 * DeltaTime))
+                    Player.Flipped = True
+            if pygame.key.get_pressed()[pygame.K_d]:
+                if not pygame.key.get_pressed()[pygame.K_a]:
+                    Player.X = int(Player.X + (500 * DeltaTime))
+                    Player.Flipped = False
+                    
+            if Player.X < 83:
+                Player.X = 83
                 
-        if zombie2 == True:
-            if playerx < zombie2x-25:
-                zombie2x -= int(315 * DeltaTime)
-            elif playerx > zombie2x+25:
-                zombie2x += int(315 * DeltaTime)
-            if playery < zombie2y-25:
-                zombie2y -= int(315 * DeltaTime)
-            elif playery > zombie2y+25:
-                zombie2y += int(315 * DeltaTime)
-            if zombie2rect.colliderect(wswordrect):
-                enemies = enemies - 1
-                zombie2 = False
-            elif zombie2rect.colliderect(playerrect):
-                enemies = 0
-                room = 0
-                playerx = 605
-                playery = 325
-
-        if demonspawn1 == True:
-            if playerx < ds1x-25:
-                ds1x -= int(625 * DeltaTime)
-            elif playerx > ds1x+25:
-                ds1x += int(625 * DeltaTime)
-            if playery < ds1y-25:
-                ds1y -= int(625 * DeltaTime)
-            elif playery > ds1y+25:
-                ds1y += int(625 * DeltaTime)
-            if ds1rect.colliderect(wswordrect):
-                enemies = enemies - 1
-                demonspawn1 = False
-            elif ds1rect.colliderect(playerrect):
-                enemies = 0
-                room = 0
-                playerx = 605
-                playery = 325
-        if demonspawn2 == True:
-            if playerx < ds2x-25:
-                ds2x -= int(625 * DeltaTime)
-            elif playerx > ds2x+25:
-                ds2x += int(625 * DeltaTime)
-            if playery < ds2y-25:
-                ds2y -= int(625 * DeltaTime)
-            elif playery > ds2y+25:
-                ds2y += int(625 * DeltaTime)
-            if ds2rect.colliderect(wswordrect):
-                enemies = enemies - 1
-                demonspawn2 = False
-            elif ds2rect.colliderect(playerrect):
-                enemies = 0
-                room = 0
-                playerx = 605
-                playery = 325
-        if demonspawn3 == True:
-            if playerx < ds3x-25:
-                ds3x -= int(625 * DeltaTime)
-            elif playerx > ds3x+25:
-                ds3x += int(625 * DeltaTime)
-            if playery < ds3y-25:
-                ds3y -= int(625 * DeltaTime)
-            elif playery > ds3y+25:
-                ds3y += int(625 * DeltaTime)
-            if ds3rect.colliderect(wswordrect):
-                enemies = enemies - 1
-                demonspawn3 = False
-            elif ds3rect.colliderect(playerrect):
-                enemies = 0
-                room = 0
-                playerx = 605
-                playery = 325
-        if demonspawn4 == True:
-            if playerx < ds4x-25:
-                ds4x -= int(625 * DeltaTime)
-            elif playerx > ds4x+25:
-                ds4x += int(625 * DeltaTime)
-            if playery < ds4y-25:
-                ds4y -= int(625 * DeltaTime)
-            elif playery > ds4y+25:
-                ds4y += int(625 * DeltaTime)
-            if ds4rect.colliderect(wswordrect):
-                enemies = enemies - 1
-                demonspawn4 = False
-            elif ds4rect.colliderect(playerrect):
-                enemies = 0
-                room = 0
-                playerx = 605
-                playery = 325
-        if demonspawn5 == True:
-            if playerx < ds5x-25:
-                ds5x -= int(625 * DeltaTime)
-            elif playerx > ds5x+25:
-                ds5x += int(625 * DeltaTime)
-            if playery < ds5y-25:
-                ds2y -= int(625 * DeltaTime)
-            elif playery > ds5y+25:
-                ds5y += int(625 * DeltaTime)
-            if ds5rect.colliderect(wswordrect):
-                enemies = enemies - 1
-                demonspawn5 = False
-            elif ds5rect.colliderect(playerrect):
-                enemies = 0
-                room = 0
-                playerx = 605
-                playery = 325
-        if demonspawn6 == True:
-            if playerx < ds6x-25:
-                ds6x -= int(625 * DeltaTime)
-            elif playerx > ds6x+25:
-                ds6x += int(625 * DeltaTime)
-            if playery < ds6y-25:
-                ds6y -= int(625 * DeltaTime)
-            elif playery > ds6y+25:
-                ds6y += int(625 * DeltaTime)
-            if ds6rect.colliderect(wswordrect):
-                enemies = enemies - 1
-                demonspawn6 = False
-            elif ds6rect.colliderect(playerrect):
-                enemies = 0
-                room = 0
-                playerx = 605
-                playery = 325
-        
-        if demon == True:
-            if demonspawn < 3:
-                if elapsed > 1:
-                    elapsed = 0
-                    enemies = enemies+1
-                    if demonspawn == 0:
-                        ds1x = demonx + 32
-                        ds1y = demony + 32
-                        demonspawn = 1
-                        demonspawn1 = True
-                    elif demonspawn == 1:
-                        ds2x = demonx + 32
-                        ds2y = demony + 32
-                        demonspawn = 2
-                        demonspawn2 = True
-                    elif demonspawn == 2:
-                        ds3x = demonx + 32
-                        ds3y = demony + 32
-                        demonspawn3 = True
-                        demonspawn = 3
-                    do_once = 0
-                if do_once == 0:
-                    do_once = 1
-                    start = time.time()
-                current = time.time()
-                elapsed = (current - start)
-            if demonrect.colliderect(wswordrect):
-                enemies = enemies-1
-                demon = False
-            elif demonrect.colliderect(playerrect):
-                enemies = 0
-                room = 0
-                playerx = 605
-                playery = 325
-
-            if demonx < playerx - 350:
-                demonx += int(190 * DeltaTime)
-            elif demonx > playerx + 350:
-                demonx -= int(190 * DeltaTime)
-            
-            if demony < playery - 350:
-                demony += int(190 * DeltaTime)
-            elif demony > playery + 350:
-                demony -= int(190 * DeltaTime)
+            if Player.X > 877:
+                Player.X = 877
                 
-        if demon2 == True:
-            if demon2spawn < 3:
-                if elapsed2 > 1:
-                    elapsed2 = 0
-                    enemies = enemies+1
-                    if demon2spawn == 0:
-                        ds4x = demon2x + 32
-                        ds4y = demon2y + 32
-                        demon2spawn = 1
-                        demonspawn4 = True
-                    elif demon2spawn == 1:
-                        ds5x = demon2x + 32
-                        ds5y = demon2y + 32
-                        demon2spawn = 2
-                        demonspawn5 = True
-                    elif demon2spawn == 2:
-                        ds6x = demon2x + 32
-                        ds6y = demon2y + 32
-                        demonspawn6 = True
-                        demon2spawn = 3
-                    do_once2 = 0
-                if do_once2 == 0:
-                    do_once2 = 1
-                    start2 = time.time()
-                current2 = time.time()
-                elapsed2 = (current2 - start2)
-            if demon2rect.colliderect(wswordrect):
-                enemies = enemies-1
-                demon2 = False
-            elif demon2rect.colliderect(playerrect):
-                enemies = 0
-                room = 0
-                playerx = 605
-                playery = 325
+            if Player.Y > 494:
+                Player.Y = 494
 
-            if demon2x < playerx - 350:
-                demon2x += int(190 * DeltaTime)
-            elif demon2x > playerx + 350:
-                demon2x -= int(190 * DeltaTime)
-            
-            if demon2y < playery - 350:
-                demon2y += int(190 * DeltaTime)
-            elif demon2y > playery + 350:
-                demon2y -= int(190 * DeltaTime)
+            if Player.X < 400:
+                if Player.Y < 40:
+                    Player.X = 400
+                elif Player.Y < 68:
+                    Player.Y = 68
+            elif Player.X > 557:
+                if Player.Y < 40:
+                    Player.X = 557
+                elif Player.Y < 68:
+                    Player.Y = 68
 
-        drawscreen.blit(wf1.image, (0, 0))
-        drawscreen.blit(wf1.image, (128, 0))
-        drawscreen.blit(wf1.image, (256, 0))
-        drawscreen.blit(wf1.image, (384, 0))
-        drawscreen.blit(wf1.image, (768, 0))
-        drawscreen.blit(wf1.image, (896, 0))
-        drawscreen.blit(wf1.image, (1024, 0))
-        drawscreen.blit(wf1.image, (1152, 0))
-        if zombie1 == True:
-            if playerx > zombie1x:
-                zombie1flipped = pygame.transform.flip(zomb1.image, False, False)
-            else:
-                zombie1flipped = pygame.transform.flip(zomb1.image, True, False)
-            drawscreen.blit(zombie1flipped, zombie1rect)
-        if zombie2 == True:
-            if playerx > zombie2x:
-                zombie2flipped = pygame.transform.flip(zomb2.image, False, False)
-            else:
-                zombie2flipped = pygame.transform.flip(zomb2.image, True, False)
-            drawscreen.blit(zombie2flipped, zombie2rect)
-        if demonspawn1 == True:
-            if playerx > ds1x:
-                ds1flipped = pygame.transform.flip(dems1.image, False, False)
-            else:
-                ds1flipped = pygame.transform.flip(dems1.image, True, False)
-            drawscreen.blit(ds1flipped, ds1rect)
-        if demonspawn2 == True:
-            if playerx > ds2x:
-                ds2flipped = pygame.transform.flip(dems2.image, False, False)
-            else:
-                ds2flipped = pygame.transform.flip(dems2.image, True, False)
-            drawscreen.blit(ds2flipped, ds2rect)
-        if demonspawn3 == True:
-            if playerx > ds3x:
-                ds3flipped = pygame.transform.flip(dems3.image, False, False)
-            else:
-                ds3flipped = pygame.transform.flip(dems3.image, True, False)
-            drawscreen.blit(ds3flipped, ds3rect)
-        if demonspawn4 == True:
-            if playerx > ds4x:
-                ds4flipped = pygame.transform.flip(dems4.image, False, False)
-            else:
-                ds4flipped = pygame.transform.flip(dems4.image, True, False)
-            drawscreen.blit(ds4flipped, ds4rect)
-        if demonspawn5 == True:
-            if playerx > ds5x:
-                ds5flipped = pygame.transform.flip(dems5.image, False, False)
-            else:
-                ds5flipped = pygame.transform.flip(dems5.image, True, False)
-            drawscreen.blit(ds5flipped, ds5rect)
-        if demonspawn6 == True:
-            if playerx > ds6x:
-                ds6flipped = pygame.transform.flip(dems6.image, False, False)
-            else:
-                ds6flipped = pygame.transform.flip(dems6.image, True, False)
-            drawscreen.blit(ds6flipped, ds6rect)
-        if demon == True:
-            if playerx > demonx:
-                demflipped = pygame.transform.flip(dem.image, False, False)
-            else:
-                demflipped = pygame.transform.flip(dem.image, True, False)
-            drawscreen.blit(demflipped, demonrect)
-        if demon2 == True:
-            if playerx > demon2x:
-                dem2flipped = pygame.transform.flip(dem2.image, False, False)
-            else:
-                dem2flipped = pygame.transform.flip(dem2.image, True, False)
-            drawscreen.blit(dem2flipped, demon2rect)
-        if not room == 0:
-            drawscreen.blit(playerflipped, playerrect)
-            if room > 1:
-                if playerweapon == 1:
-                    drawscreen.blit(woodswordrotated, (weaponx, weapony))
-            drawscreen.blit(roomsurface, (950, 15))
+            if Player.Y < 24:
+                if not Enemies == 0:
+                    Player.Y = 24
+                else:
+                    RoomCompleted = True
+
+            if pygame.key.get_pressed()[pygame.K_w]:
+                if pygame.key.get_pressed()[pygame.K_a]:
+                    Sword.X = Player.X - 99
+                    Sword.Y = Player.Y - 75
+                    Sword.Rotation = 45
+                elif pygame.key.get_pressed()[pygame.K_d]:
+                    Sword.X = Player.X + 75
+                    Sword.Y = Player.Y - 75
+                    Sword.Rotation = 315
+                else:
+                    Sword.X = Player.X
+                    Sword.Y = Player.Y - 75
+                    Sword.Rotation = 0
+
+            if pygame.key.get_pressed()[pygame.K_s]:
+                if pygame.key.get_pressed()[pygame.K_a]:
+                    Sword.X = Player.X - 99
+                    Sword.Y = Player.Y + 75
+                    Sword.Rotation = 135
+                elif pygame.key.get_pressed()[pygame.K_d]:
+                    Sword.X = Player.X + 75
+                    Sword.Y = Player.Y + 75
+                    Sword.Rotation = 225
+                else:
+                    Sword.X = Player.X
+                    Sword.Y = Player.Y + 75
+                    Sword.Rotation = 180
+
+            if pygame.key.get_pressed()[pygame.K_d]:
+                if not pygame.key.get_pressed()[pygame.K_a]:
+                    if not pygame.key.get_pressed()[pygame.K_w]:
+                        if not pygame.key.get_pressed()[pygame.K_s]:
+                            Sword.X = Player.X + 75
+                            Sword.Y = Player.Y
+                            Sword.Rotation = 270
+
+            if pygame.key.get_pressed()[pygame.K_a]:
+                if not pygame.key.get_pressed()[pygame.K_d]:
+                    if not pygame.key.get_pressed()[pygame.K_w]:
+                        if not pygame.key.get_pressed()[pygame.K_s]:
+                            Sword.X = Player.X - 99
+                            Sword.Y = Player.Y
+                            Sword.Rotation = 90
+
+            PlayerRect = Player.image.get_rect(center=(Player.X, Player.Y))
+            SwordRect = Sword.image.get_rect(center=(Sword.X, Sword.Y))
+            Zombie1Rect = Zombie1.image.get_rect(center=(Zombie1.X, Zombie1.Y))
+            Zombie2Rect = Zombie2.image.get_rect(center=(Zombie2.X, Zombie2.Y))
+            Demon1Rect = Demon1.image.get_rect(center=(Demon1.X, Demon1.Y))
+            Demon2Rect = Demon2.image.get_rect(center=(Demon2.X, Demon2.Y))
+            Demonspawn1Rect = Demonspawn1.image.get_rect(center=(Demonspawn1.X, Demonspawn1.Y))
+            Demonspawn2Rect = Demonspawn2.image.get_rect(center=(Demonspawn2.X, Demonspawn2.Y))
+            Demonspawn3Rect = Demonspawn3.image.get_rect(center=(Demonspawn3.X, Demonspawn3.Y))
+            Demonspawn4Rect = Demonspawn4.image.get_rect(center=(Demonspawn4.X, Demonspawn4.Y))
+            Demonspawn5Rect = Demonspawn5.image.get_rect(center=(Demonspawn5.X, Demonspawn5.Y))
+            Demonspawn6Rect = Demonspawn6.image.get_rect(center=(Demonspawn6.X, Demonspawn6.Y))
+
+            SwordRotated = pygame.transform.rotate(Sword.image, Sword.Rotation)
+
+            if Zombie1.Alive == True:
+                if Zombie1.X < Player.X:
+                    Zombie1.Flipped = False
+                else:
+                    Zombie1.Flipped = True
+                if Zombie1Rect.colliderect(SwordRect):
+                    Zombie1.Alive = False
+                    Enemies = Enemies - 1
+                elif Zombie1Rect.colliderect(PlayerRect):
+                    Room = 0
+                
+                if Zombie1.X < Player.X - 10:
+                    Zombie1.X = int(Zombie1.X + (315 * DeltaTime))
+                elif Zombie1.X > Player.X + 10:
+                    Zombie1.X = int(Zombie1.X - (315 * DeltaTime))
+
+                if Zombie1.Y < Player.Y - 10:
+                    Zombie1.Y = int(Zombie1.Y + (315 * DeltaTime))
+                elif Zombie1.Y > Player.Y + 10:
+                    Zombie1.Y = int(Zombie1.Y - (315 * DeltaTime))
+                    
+                if Zombie1.X < 66:
+                    Zombie1.X = 66
+                
+                if Zombie1.X > 865:
+                    Zombie1.X = 865
+                
+                if Zombie1.Y > 494:
+                    Zombie1.Y = 494
+
+                if Zombie1.X < 400:
+                    if Zombie1.Y < 40:
+                        Zombie1.X = 400
+                    elif Zombie1.Y < 68:
+                        Zombie1.Y = 68
+                elif Zombie1.X > 557:
+                    if Zombie1.Y < 40:
+                        Zombie1.X = 557
+                    elif Zombie1.Y < 68:
+                        Zombie1.Y = 68
+
+                if Zombie1.Y < 24:
+                    Zombie1.Y = 24
+
+            if Zombie2.Alive == True:
+                if Zombie2.X < Player.X:
+                    Zombie2.Flipped = False
+                else:
+                    Zombie2.Flipped = True
+                if Zombie2Rect.colliderect(SwordRect):
+                    Zombie2.Alive = False
+                    Enemies = Enemies - 1
+                elif Zombie2Rect.colliderect(PlayerRect):
+                    Room = 0
+                
+                if Zombie2.X < Player.X - 10:
+                    Zombie2.X = int(Zombie2.X + (315 * DeltaTime))
+                elif Zombie2.X > Player.X + 10:
+                    Zombie2.X = int(Zombie2.X - (315 * DeltaTime))
+
+                if Zombie2.Y < Player.Y - 10:
+                    Zombie2.Y = int(Zombie2.Y + (315 * DeltaTime))
+                elif Zombie2.Y > Player.Y + 10:
+                    Zombie2.Y = int(Zombie2.Y - (315 * DeltaTime))
+                    
+                if Zombie2.X < 66:
+                    Zombie2.X = 66
+                
+                if Zombie2.X > 865:
+                    Zombie2.X = 865
+                
+                if Zombie2.Y > 494:
+                    Zombie2.Y = 494
+
+                if Zombie2.X < 400:
+                    if Zombie2.Y < 40:
+                        Zombie2.X = 400
+                    elif Zombie2.Y < 68:
+                        Zombie2.Y = 68
+                elif Zombie2.X > 557:
+                    if Zombie2.Y < 40:
+                        Zombie2.X = 557
+                    elif Zombie2.Y < 68:
+                        Zombie1.Y = 68
+
+                if Zombie2.Y < 24:
+                    Zombie2.Y = 24
+                    
+            if Demon1.Alive == True:
+                if Demon1.X > Player.X:
+                    Demon1.Flipped = True
+                else:
+                    Demon1.Flipped = False
+                    
+                if Demon1.X < Player.X - 360:
+                    Demon1.X = int(Demon1.X + (125 * DeltaTime))
+                elif Demon1.X > Player.X + 360:
+                    Demon1.X = int(Demon1.X - (125 * DeltaTime))
+
+                if Demon1.Y < Player.Y - 270:
+                    Demon1.Y = int(Demon1.Y + (125 * DeltaTime))
+                elif Demon1.Y > Player.Y + 270:
+                    Demon1.Y = int(Demon1.Y - (125 * DeltaTime))
+                
+                if Demon1.Timer == False:
+                    Demon1.Timer = True
+                    Demon1.TimerStart = int(time.time())
+                
+                Demon1.TimerCurrent = int(time.time())
+                
+                Demon1.TimerElapsed = Demon1.TimerCurrent - Demon1.TimerStart
+                
+                if Demon1.TimerElapsed > 0.99:
+                    Demon1.TimerStart = 0
+                    Demon1.TimerCurrent = 0
+                    Demon1.TimerElapsed = 0
+                    Demon1.Timer = False
+                    if Demon1.Spawn == 0:
+                        Enemies = Enemies + 1
+                        Demon1.Spawn = 1
+                        Demonspawn1.X = Demon1.X
+                        Demonspawn1.Y = Demon1.Y
+                        Demonspawn1.Alive = True
+                    elif Demon1.Spawn == 1:
+                        Enemies = Enemies + 1
+                        Demon1.Spawn = 2
+                        Demonspawn2.X = Demon1.X
+                        Demonspawn2.Y = Demon1.Y
+                        Demonspawn2.Alive = True
+                    elif Demon1.Spawn == 2:
+                        Enemies = Enemies + 1
+                        Demon1.Spawn = 3
+                        Demonspawn3.X = Demon1.X
+                        Demonspawn3.Y = Demon1.Y
+                        Demonspawn3.Alive = True
+                    
+                if Demon1Rect.colliderect(SwordRect):
+                    Enemies = Enemies - 1
+                    Demon1.Alive = False
+                
+                if Demon1Rect.colliderect(PlayerRect):
+                    Room = 0
+                    
+            if Demon2.Alive == True:
+                if Demon2.X > Player.X:
+                    Demon2.Flipped = True
+                else:
+                    Demon2.Flipped = False
+                    
+                if Demon2.X < Player.X - 360:
+                    Demon2.X = int(Demon2.X + (125 * DeltaTime))
+                elif Demon2.X > Player.X + 360:
+                    Demon2.X = int(Demon2.X - (125 * DeltaTime))
+
+                if Demon2.Y < Player.Y - 270:
+                    Demon2.Y = int(Demon2.Y + (125 * DeltaTime))
+                elif Demon2.Y > Player.Y + 270:
+                    Demon2.Y = int(Demon2.Y - (125 * DeltaTime))
+                
+                if Demon2.Timer == False:
+                    Demon2.Timer = True
+                    Demon2.TimerStart = int(time.time())
+                
+                Demon2.TimerCurrent = int(time.time())
+                
+                Demon2.TimerElapsed = Demon2.TimerCurrent - Demon2.TimerStart
+                
+                if Demon2.TimerElapsed > 0.99:
+                    Demon2.TimerStart = 0
+                    Demon2.TimerCurrent = 0
+                    Demon2.TimerElapsed = 0
+                    Demon2.Timer = False
+                    if Demon2.Spawn == 0:
+                        Enemies = Enemies + 1
+                        Demon2.Spawn = 1
+                        Demonspawn4.X = Demon2.X
+                        Demonspawn4.Y = Demon2.Y
+                        Demonspawn4.Alive = True
+                    elif Demon2.Spawn == 1:
+                        Enemies = Enemies + 1
+                        Demon2.Spawn = 2
+                        Demonspawn5.X = Demon2.X
+                        Demonspawn5.Y = Demon2.Y
+                        Demonspawn5.Alive = True
+                    elif Demon2.Spawn == 2:
+                        Enemies = Enemies + 1
+                        Demon2.Spawn = 3
+                        Demonspawn6.X = Demon2.X
+                        Demonspawn6.Y = Demon2.Y
+                        Demonspawn6.Alive = True
+                    
+                if Demon2Rect.colliderect(SwordRect):
+                    Enemies = Enemies - 1
+                    Demon2.Alive = False
+                
+                if Demon2Rect.colliderect(PlayerRect):
+                    Room = 0
+
+            if Demonspawn1.Alive == True:
+                if Demonspawn1.X < Player.X:
+                    Demonspawn1.Flipped = False
+                else:
+                    Demonspawn1.Flipped = True
+                    
+                if Demonspawn1.X > Player.X + 10:
+                    Demonspawn1.X = int(Demonspawn1.X - (560 * DeltaTime))
+                elif Demonspawn1.X < Player.X - 10:
+                    Demonspawn1.X = int(Demonspawn1.X + (560 * DeltaTime))
+
+                if Demonspawn1.Y > Player.Y + 10:
+                    Demonspawn1.Y = int(Demonspawn1.Y - (560 * DeltaTime))
+                elif Demonspawn1.Y < Player.Y - 10:
+                    Demonspawn1.Y = int(Demonspawn1.Y + (560 * DeltaTime))
+                    
+                if Demonspawn1Rect.colliderect(SwordRect):
+                    Enemies = Enemies - 1
+                    Demonspawn1.Alive = False
+                elif Demonspawn1Rect.colliderect(PlayerRect):
+                    Room = 0
+                    
+            if Demonspawn2.Alive == True:
+                if Demonspawn2.X < Player.X:
+                    Demonspawn2.Flipped = False
+                else:
+                    Demonspawn2.Flipped = True
+                    
+                if Demonspawn2.X > Player.X + 10:
+                    Demonspawn2.X = int(Demonspawn2.X - (560 * DeltaTime))
+                elif Demonspawn2.X < Player.X - 10:
+                    Demonspawn2.X = int(Demonspawn2.X + (560 * DeltaTime))
+
+                if Demonspawn2.Y > Player.Y + 10:
+                    Demonspawn2.Y = int(Demonspawn2.Y - (560 * DeltaTime))
+                elif Demonspawn2.Y < Player.Y - 10:
+                    Demonspawn2.Y = int(Demonspawn2.Y + (560 * DeltaTime))
+                    
+                if Demonspawn2Rect.colliderect(SwordRect):
+                    Enemies = Enemies - 1
+                    Demonspawn2.Alive = False
+                elif Demonspawn2Rect.colliderect(PlayerRect):
+                    Room = 0
+
+            if Demonspawn3.Alive == True:
+                if Demonspawn3.X < Player.X:
+                    Demonspawn3.Flipped = False
+                else:
+                    Demonspawn3.Flipped = True
+                    
+                if Demonspawn3.X > Player.X + 10:
+                    Demonspawn3.X = int(Demonspawn3.X - (560 * DeltaTime))
+                elif Demonspawn3.X < Player.X - 10:
+                    Demonspawn3.X = int(Demonspawn3.X + (560 * DeltaTime))
+
+                if Demonspawn3.Y > Player.Y + 10:
+                    Demonspawn3.Y = int(Demonspawn3.Y - (560 * DeltaTime))
+                elif Demonspawn3.Y < Player.Y - 10:
+                    Demonspawn3.Y = int(Demonspawn3.Y + (560 * DeltaTime))
+                    
+                if Demonspawn3Rect.colliderect(SwordRect):
+                    Enemies = Enemies - 1
+                    Demonspawn3.Alive = False
+                elif Demonspawn3Rect.colliderect(PlayerRect):
+                    Room = 0
+
+            if Demonspawn4.Alive == True:
+                if Demonspawn4.X < Player.X:
+                    Demonspawn4.Flipped = False
+                else:
+                    Demonspawn4.Flipped = True
+                    
+                if Demonspawn4.X > Player.X + 10:
+                    Demonspawn4.X = int(Demonspawn4.X - (560 * DeltaTime))
+                elif Demonspawn4.X < Player.X - 10:
+                    Demonspawn4.X = int(Demonspawn4.X + (560 * DeltaTime))
+
+                if Demonspawn4.Y > Player.Y + 10:
+                    Demonspawn4.Y = int(Demonspawn4.Y - (560 * DeltaTime))
+                elif Demonspawn4.Y < Player.Y - 10:
+                    Demonspawn4.Y = int(Demonspawn4.Y + (560 * DeltaTime))
+                    
+                if Demonspawn4Rect.colliderect(SwordRect):
+                    Enemies = Enemies - 1
+                    Demonspawn4.Alive = False
+                elif Demonspawn4Rect.colliderect(PlayerRect):
+                    Room = 0
+                    
+            if Demonspawn5.Alive == True:
+                if Demonspawn5.X < Player.X:
+                    Demonspawn5.Flipped = False
+                else:
+                    Demonspawn5.Flipped = True
+                    
+                if Demonspawn5.X > Player.X + 10:
+                    Demonspawn5.X = int(Demonspawn5.X - (560 * DeltaTime))
+                elif Demonspawn5.X < Player.X - 10:
+                    Demonspawn5.X = int(Demonspawn5.X + (560 * DeltaTime))
+
+                if Demonspawn5.Y > Player.Y + 10:
+                    Demonspawn5.Y = int(Demonspawn5.Y - (560 * DeltaTime))
+                elif Demonspawn5.Y < Player.Y - 10:
+                    Demonspawn5.Y = int(Demonspawn5.Y + (560 * DeltaTime))
+                    
+                if Demonspawn5Rect.colliderect(SwordRect):
+                    Enemies = Enemies - 1
+                    Demonspawn5.Alive = False
+                elif Demonspawn5Rect.colliderect(PlayerRect):
+                    Room = 0
+
+            if Demonspawn6.Alive == True:
+                if Demonspawn6.X < Player.X:
+                    Demonspawn6.Flipped = False
+                else:
+                    Demonspawn6.Flipped = True
+                    
+                if Demonspawn6.X > Player.X + 10:
+                    Demonspawn6.X = int(Demonspawn6.X - (560 * DeltaTime))
+                elif Demonspawn6.X < Player.X - 10:
+                    Demonspawn6.X = int(Demonspawn6.X + (560 * DeltaTime))
+
+                if Demonspawn6.Y > Player.Y + 10:
+                    Demonspawn6.Y = int(Demonspawn6.Y - (560 * DeltaTime))
+                elif Demonspawn6.Y < Player.Y - 10:
+                    Demonspawn6.Y = int(Demonspawn6.Y + (560 * DeltaTime))
+                    
+                if Demonspawn6Rect.colliderect(SwordRect):
+                    Enemies = Enemies - 1
+                    Demonspawn6.Alive = False
+                elif Demonspawn6Rect.colliderect(PlayerRect):
+                    Room = 0
+
+            if Zombie1.Alive == False:
+                Zombie1.X = -100
+                Zombie1.Y = -100
+
+            if Zombie2.Alive == False:
+                Zombie2.X = -100
+                Zombie2.Y = -100
+                
+            if Demon1.Alive == False:
+                Demon1.Spawn = 0
+                Demon1.Timer = False
+                Demon1.TimerStart = 0
+                Demon1.TimerCurrent = 0
+                Demon1.TimerElapsed = 0
+                Demon1.X = -100
+                Demon1.Y = -100
+
+            if Demon2.Alive == False:
+                Demon2.Spawn = 0
+                Demon2.Timer = False
+                Demon2.TimerStart = 0
+                Demon2.TimerCurrent = 0
+                Demon2.TimerElapsed = 0
+                Demon2.X = -100
+                Demon2.Y = -100
+
+            if Demonspawn1.Alive == False:
+                Demonspawn1.X = -100
+                Demonspawn1.Y = -100
+
+            if Demonspawn2.Alive == False:
+                Demonspawn2.X = -100
+                Demonspawn2.Y = -100
+
+            if Demonspawn3.Alive == False:
+                Demonspawn3.X = -100
+                Demonspawn3.Y = -100
+
+            if Demonspawn4.Alive == False:
+                Demonspawn4.X = -100
+                Demonspawn4.Y = -100
+
+            if Demonspawn5.Alive == False:
+                Demonspawn5.X = -100
+                Demonspawn5.Y = -100
+
+            if Demonspawn6.Alive == False:
+                Demonspawn6.X = -100
+                Demonspawn6.Y = -100
+
+            if Player.Flipped == False:
+                PlayerFlipped = pygame.transform.flip(Player.image, False, False)
+            elif Player.Flipped == True:
+                PlayerFlipped = pygame.transform.flip(Player.image, True, False)
+            if Zombie1.Flipped == False:
+                Zombie1Flipped = pygame.transform.flip(Zombie1.image, False, False)
+            elif Zombie1.Flipped == True:
+                Zombie1Flipped = pygame.transform.flip(Zombie1.image, True, False)
+            if Zombie2.Flipped == False:
+                Zombie2Flipped = pygame.transform.flip(Zombie2.image, False, False)
+            elif Zombie2.Flipped == True:
+                Zombie2Flipped = pygame.transform.flip(Zombie2.image, True, False)
+            if Demon1.Flipped == False:
+                Demon1Flipped = pygame.transform.flip(Demon1.image, False, False)
+            elif Demon1.Flipped == True:
+                Demon1Flipped = pygame.transform.flip(Demon1.image, True, False)
+            if Demon2.Flipped == False:
+                Demon2Flipped = pygame.transform.flip(Demon2.image, False, False)
+            elif Demon2.Flipped == True:
+                Demon2Flipped = pygame.transform.flip(Demon2.image, True, False)
+            if Demonspawn1.Flipped == False:
+                Demonspawn1Flipped = pygame.transform.flip(Demonspawn1.image, False, False)
+            elif Demonspawn1.Flipped == True:
+                Demonspawn1Flipped = pygame.transform.flip(Demonspawn1.image, True, False)
+            if Demonspawn2.Flipped == False:
+                Demonspawn2Flipped = pygame.transform.flip(Demonspawn2.image, False, False)
+            elif Demonspawn2.Flipped == True:
+                Demonspawn2Flipped = pygame.transform.flip(Demonspawn2.image, True, False)
+            if Demonspawn3.Flipped == False:
+                Demonspawn3Flipped = pygame.transform.flip(Demonspawn3.image, False, False)
+            elif Demonspawn3.Flipped == True:
+                Demonspawn3Flipped = pygame.transform.flip(Demonspawn3.image, True, False)
+            if Demonspawn4.Flipped == False:
+                Demonspawn4Flipped = pygame.transform.flip(Demonspawn4.image, False, False)
+            elif Demonspawn4.Flipped == True:
+                Demonspawn4Flipped = pygame.transform.flip(Demonspawn4.image, True, False)
+            if Demonspawn5.Flipped == False:
+                Demonspawn5Flipped = pygame.transform.flip(Demonspawn5.image, False, False)
+            elif Demonspawn5.Flipped == True:
+                Demonspawn5Flipped = pygame.transform.flip(Demonspawn5.image, True, False)
+            if Demonspawn6.Flipped == False:
+                Demonspawn6Flipped = pygame.transform.flip(Demonspawn6.image, False, False)
+            elif Demonspawn6.Flipped == True:
+                Demonspawn6Flipped = pygame.transform.flip(Demonspawn6.image, True, False)
+
+        Screen.fill((66, 40, 53))
+
+        Screen.blit(Wall1.image, (0, 0))
+        Screen.blit(Wall4.image, (64, 0))
+        Screen.blit(Wall1.image, (128, 0))
+        Screen.blit(Wall2.image, (192, 0))
+        Screen.blit(Wall1.image, (256, 0))
+        Screen.blit(Wall5.image, (320, 0))
+        Screen.blit(Stairs.image, (384, -32))
+        Screen.blit(Wall1.image, (576, 0))
+        Screen.blit(Wall4.image, (640, 0))
+        Screen.blit(Wall1.image, (704, 0))
+        Screen.blit(Wall3.image, (768, 0))
+        Screen.blit(Wall1.image, (832, 0))
+        Screen.blit(Wall5.image, (896, 0))
+
+
+        Screen.blit(Wall4.image, (896, 64))
+        Screen.blit(Wall1.image, (896, 128))
+        Screen.blit(Wall1.image, (896, 192))
+        Screen.blit(Wall5.image, (896, 256))
+        Screen.blit(Wall1.image, (896, 320))
+        Screen.blit(Wall4.image, (896, 384))
+        Screen.blit(Wall4.image, (896, 448))
+        Screen.blit(Wall1.image, (896, 518))
+        
+        
+        Screen.blit(Wall5.image, (0, 64))
+        Screen.blit(Wall4.image, (0, 128))
+        Screen.blit(Wall1.image, (0, 192))
+        Screen.blit(Wall1.image, (0, 256))
+        Screen.blit(Wall4.image, (0, 320))
+        Screen.blit(Wall4.image, (0, 384))
+        Screen.blit(Wall1.image, (0, 448))
+        Screen.blit(Wall5.image, (0, 518))
+
+
+        Screen.blit(Wall1.image, (64, 518))
+        Screen.blit(Wall4.image, (128, 518))
+        Screen.blit(Wall4.image, (192, 518))
+        Screen.blit(Wall1.image, (256, 518))
+        Screen.blit(Wall5.image, (320, 518))
+        Screen.blit(Stairs.image, (384, 518))
+        Screen.blit(Wall5.image, (576, 518))
+        Screen.blit(Wall1.image, (640, 518))
+        Screen.blit(Wall4.image, (704, 518))
+        Screen.blit(Wall1.image, (768, 518))
+        Screen.blit(Wall1.image, (832, 518))
+
+        if Room == 0:
+            Title = Font1.render('Crossrain', False, (255, 255, 255))
+            StartPrompt = Font3.render('Enter to start', False, (255, 255, 255))
+            MoveInstructions = Font3.render('WASD to move/aim', False, (255, 255, 255))
+            Version = Font2.render('v0.2.0', False, (255, 255, 255))
+            Screen.blit(Title, ((WindowWidth/2)-220, 75))
+            Screen.blit(StartPrompt, ((WindowWidth/2)-110, 200))
+            Screen.blit(MoveInstructions, (30, 500))
+            Screen.blit(Version, (800, 500))
         else:
-            drawscreen.blit(titlesurface, (300, 125))
-            drawscreen.blit(startsurface, ((640-60), 300))
-            drawscreen.blit(selectsurface, (selectx, selecty))
-            drawscreen.blit(instructionsurface, (50, 675))
-            drawscreen.blit(versionsurface, (1100, 675))
+            CurrentRoom = Font2.render('Room:'+str(Room), False, (255, 255, 255))
+            Screen.blit(PlayerFlipped, (PlayerRect))
+            Screen.blit(SwordRotated, (SwordRect))
+            if Zombie1.Alive == True:
+                Screen.blit(Zombie1Flipped, (Zombie1Rect))
+            if Zombie2.Alive == True:
+                Screen.blit(Zombie2Flipped, (Zombie2Rect))
+            if Demonspawn1.Alive == True:
+                Screen.blit(Demonspawn1Flipped, (Demonspawn1Rect))
+            if Demonspawn2.Alive == True:
+                Screen.blit(Demonspawn2Flipped, (Demonspawn2Rect))
+            if Demonspawn3.Alive == True:
+                Screen.blit(Demonspawn3Flipped, (Demonspawn3Rect))
+            if Demonspawn4.Alive == True:
+                Screen.blit(Demonspawn4Flipped, (Demonspawn4Rect))
+            if Demonspawn5.Alive == True:
+                Screen.blit(Demonspawn5Flipped, (Demonspawn5Rect))
+            if Demonspawn6.Alive == True:
+                Screen.blit(Demonspawn6Flipped, (Demonspawn6Rect))
+            if Demon1.Alive == True:
+                Screen.blit(Demon1Flipped, (Demon1Rect))
+            if Demon2.Alive == True:
+                Screen.blit(Demon2Flipped, (Demon2Rect))
+            Screen.blit(CurrentRoom, (750, 15))
 
-        drawscreen.blit(fpssurface, (35, 15))
-        actualscreen.blit(pygame.transform.scale(drawscreen, actualscreen.get_rect().size), (0, 0))
+        Screen.blit(FPSText, (25, 15))
+
+        Window.blit(pygame.transform.scale(Screen, Window.get_rect().size), (0, 0))
         pygame.display.flip()
 
-        if not running:
+        if not Running:
             pygame.quit()
             return
 
-        await asyncio.sleep(0)  # Very important, and keep it 0
+        await asyncio.sleep(0)
 
-# This is the program entry point:
-asyncio.run(main())
-pygame.quit()
-
-# Do not add anything from here
-# asyncio.run is non-blocking on pygame-wasm
+asyncio.run(Game())
