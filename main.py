@@ -1,6 +1,7 @@
 import asyncio
 import pygame
 import time
+import os
 
 from objects import WindowIcon
 from objects import WallOne
@@ -9,6 +10,7 @@ from objects import WallThree
 from objects import WallFour
 from objects import WallFive
 from objects import Stair
+from objects import WizardHealth
 from objects import Wizard
 from objects import Weapon
 from objects import ZombieOne
@@ -21,6 +23,8 @@ from objects import DemonspawnThree
 from objects import DemonspawnFour
 from objects import DemonspawnFive
 from objects import DemonspawnSix
+from objects import BatOne
+from objects import BatTwo
 
 pygame.init()
 Window = pygame.display.set_mode((960, 540), pygame.RESIZABLE)
@@ -41,6 +45,7 @@ Wall3 = WallThree()
 Wall4 = WallFour()
 Wall5 = WallFive()
 Stairs = Stair()
+PlayerHealth = WizardHealth()
 Player = Wizard()
 Sword = Weapon()
 Zombie1 = ZombieOne()
@@ -53,6 +58,57 @@ Demonspawn3 = DemonspawnThree()
 Demonspawn4 = DemonspawnFour()
 Demonspawn5 = DemonspawnFive()
 Demonspawn6 = DemonspawnSix()
+Bat1 = BatOne()
+Bat2 = BatTwo()
+
+BatAlive = [Bat1.Anim1Frame0, Bat1.Anim1Frame0, Bat1.Anim1Frame0, Bat1.Anim1Frame0, Bat1.Anim1Frame0, Bat1.Anim1Frame0, Bat1.Anim1Frame0, Bat1.Anim1Frame0, Bat1.Anim1Frame0, Bat1.Anim1Frame0,
+            Bat1.Anim1Frame1, Bat1.Anim1Frame1, Bat1.Anim1Frame1, Bat1.Anim1Frame1, Bat1.Anim1Frame1, Bat1.Anim1Frame1, Bat1.Anim1Frame1, Bat1.Anim1Frame1, Bat1.Anim1Frame1, Bat1.Anim1Frame1]
+
+BatHit = [Bat1.Anim2Frame0, Bat1.Anim2Frame0, Bat1.Anim2Frame0, Bat1.Anim2Frame0, Bat1.Anim2Frame0,
+          Bat1.Anim2Frame0, Bat1.Anim2Frame0, Bat1.Anim2Frame0, Bat1.Anim2Frame0, Bat1.Anim2Frame0,
+          Bat1.Anim2Frame0, Bat1.Anim2Frame0, Bat1.Anim2Frame0, Bat1.Anim2Frame0, Bat1.Anim2Frame0,
+          Bat1.Anim2Frame0, Bat1.Anim2Frame0, Bat1.Anim2Frame0, Bat1.Anim2Frame0, Bat1.Anim2Frame0,
+          Bat1.Anim2Frame0, Bat1.Anim2Frame0, Bat1.Anim2Frame0, Bat1.Anim2Frame0, Bat1.Anim2Frame0,
+          Bat1.Anim2Frame0, Bat1.Anim2Frame0, Bat1.Anim2Frame0, Bat1.Anim2Frame0, Bat1.Anim2Frame0,
+          Bat1.Anim2Frame0, Bat1.Anim2Frame0, Bat1.Anim2Frame0, Bat1.Anim2Frame0, Bat1.Anim2Frame0,
+          Bat1.Anim2Frame0, Bat1.Anim2Frame0, Bat1.Anim2Frame0, Bat1.Anim2Frame0, Bat1.Anim2Frame0,
+          Bat1.Anim2Frame0, Bat1.Anim2Frame0, Bat1.Anim2Frame0, Bat1.Anim2Frame0, Bat1.Anim2Frame0,
+          Bat1.Anim2Frame0, Bat1.Anim2Frame0, Bat1.Anim2Frame0, Bat1.Anim2Frame0, Bat1.Anim2Frame0]
+
+BatDying = [Bat1.Anim3Frame0, Bat1.Anim3Frame0, Bat1.Anim3Frame0, Bat1.Anim3Frame0, Bat1.Anim3Frame0, Bat1.Anim3Frame0, 
+            Bat1.Anim3Frame1, Bat1.Anim3Frame1, Bat1.Anim3Frame1, Bat1.Anim3Frame1, Bat1.Anim3Frame1, Bat1.Anim3Frame1, 
+            Bat1.Anim3Frame2, Bat1.Anim3Frame2, Bat1.Anim3Frame2, Bat1.Anim3Frame2, Bat1.Anim3Frame2, Bat1.Anim3Frame2, 
+            Bat1.Anim3Frame3, Bat1.Anim3Frame3, Bat1.Anim3Frame3, Bat1.Anim3Frame3, Bat1.Anim3Frame3, Bat1.Anim3Frame3, 
+            Bat1.Anim3Frame4, Bat1.Anim3Frame4, Bat1.Anim3Frame4, Bat1.Anim3Frame4, Bat1.Anim3Frame4, Bat1.Anim3Frame4]
+
+ZombieAlive = [Zombie1.Alive0, Zombie1.Alive0, Zombie1.Alive0]
+
+ZombieDying = [Zombie1.Dying0, Zombie1.Dying0,
+               Zombie1.Dying1, Zombie1.Dying1,
+               Zombie1.Dying2, Zombie1.Dying2,
+               Zombie1.Dying3, Zombie1.Dying3,
+               Zombie1.Dying4, Zombie1.Dying4]
+
+DemonAlive = [
+              Demon1.Alive0, Demon1.Alive0, Demon1.Alive0
+             ]
+
+DemonDying = [
+              Demon1.Dying0, Demon1.Dying0, Demon1.Dying0, Demon1.Dying0,
+              Demon1.Dying1, Demon1.Dying1, Demon1.Dying1, Demon1.Dying1,
+              Demon1.Dying2, Demon1.Dying2, Demon1.Dying2, Demon1.Dying2,
+              Demon1.Dying3, Demon1.Dying3, Demon1.Dying3, Demon1.Dying3,
+              Demon1.Dying4, Demon1.Dying4, Demon1.Dying4, Demon1.Dying4
+              ]
+
+if os.path.exists('./Debug'):
+    Debug = True
+    print("Debug controls:")
+    print("O and P to change the current room")
+    print("K to reset the players health counter")
+    print("L to set the completion state of the room to 'Completed'")
+else:
+    Debug = False
 
 async def Game():
     Running = True
@@ -214,6 +270,344 @@ async def Game():
                 Demon1.Alive = True
                 Demon2.Alive = True
                 RoomCompleted = False
+            elif Room == 10:
+                Enemies = 1
+                Room = 11
+                Player.X = 480
+                Player.Y = 450
+                Sword.X = 480
+                Sword.Y = 375
+                Sword.Rotation = 0
+                Bat1.X = 480
+                Bat1.Y = 75
+                Bat1.Alive = True
+                RoomCompleted = False
+            elif Room == 11:
+                Enemies = 3
+                Room = 12
+                Player.X = 480
+                Player.Y = 450
+                Sword.X = 480
+                Sword.Y = 375
+                Sword.Rotation = 0
+                Zombie1.X = 330
+                Zombie1.Y = 450
+                Zombie2.X = 630
+                Zombie2.Y = 450
+                Bat1.X = 480
+                Bat1.Y = 75
+                Zombie1.Alive = True
+                Zombie2.Alive = True
+                Bat1.Alive = True
+                RoomCompleted = False
+            elif Room == 12:
+                Enemies = 3
+                Room = 13
+                Player.X = 480
+                Player.Y = 450
+                Sword.X = 480
+                Sword.Y = 375
+                Sword.Rotation = 0
+                Bat1.X = 330
+                Bat1.Y = 450
+                Bat2.X = 630
+                Bat2.Y = 450
+                Demon1.X = 480
+                Demon1.Y = 75
+                Bat1.Alive = True
+                Bat2.Alive = True
+                Demon1.Alive = True
+                RoomCompleted = False
+            elif Room == 13:
+                Enemies = 3
+                Room = 14
+                Player.X = 480
+                Player.Y = 450
+                Sword.X = 480
+                Sword.Y = 375
+                Sword.Rotation = 0
+                Bat1.X = 250
+                Bat1.Y = 230
+                Bat2.X = 250
+                Bat2.Y = 310
+                Demon1.X = 150
+                Demon1.Y = 270
+                Bat1.Alive = True
+                Bat2.Alive = True
+                Demon1.Alive = True
+                RoomCompleted = False
+            elif Room == 14:
+                Enemies = 3
+                Room = 15
+                Player.X = 480
+                Player.Y = 450
+                Sword.X = 480
+                Sword.Y = 375
+                Sword.Rotation = 0
+                Bat1.X = 710
+                Bat1.Y = 230
+                Bat2.X = 710
+                Bat2.Y = 310
+                Demon1.X = 810
+                Demon1.Y = 270
+                Bat1.Alive = True
+                Bat2.Alive = True
+                Demon1.Alive = True
+                RoomCompleted = False
+            elif Room == 15:
+                Enemies = 4
+                Room = 16
+                Player.X = 480
+                Player.Y = 450
+                Sword.X = 480
+                Sword.Y = 375
+                Sword.Rotation = 0
+                Zombie1.X = 330
+                Zombie1.Y = 450
+                Zombie2.X = 610
+                Zombie2.Y = 450
+                Bat1.X = 330
+                Bat1.Y = 400
+                Bat2.X = 610
+                Bat2.Y = 400
+                Zombie1.Alive = True
+                Zombie2.Alive = True
+                Bat1.Alive = True
+                Bat2.Alive = True
+                RoomCompleted = False
+            elif Room == 16:
+                Enemies = 5
+                Room = 17
+                Player.X = 480
+                Player.Y = 450
+                Sword.X = 480
+                Sword.Y = 375
+                Sword.Rotation = 0
+                Zombie1.X = 100
+                Zombie1.Y = 100
+                Zombie2.X = 860
+                Zombie2.Y = 100
+                Demon1.X = 100
+                Demon1.Y = 440
+                Demon2.X = 860
+                Demon2.Y = 440
+                Bat1.X = 480
+                Bat1.Y = 75
+                Zombie1.Alive = True
+                Zombie2.Alive = True
+                Demon1.Alive = True
+                Demon2.Alive = True
+                Bat1.Alive = True
+                RoomCompleted = False
+            elif Room == 17:
+                Enemies = 4
+                Room = 18
+                Player.X = 480
+                Player.Y = 450
+                Sword.X = 480
+                Sword.Y = 375
+                Sword.Rotation = 0
+                Demon1.X = 100
+                Demon1.Y = 270
+                Zombie1.X = 860
+                Zombie1.Y = 250
+                Zombie2.X = 860
+                Zombie2.Y = 290
+                Bat1.X = 800
+                Bat1.Y = 270
+                Demon1.Alive = True
+                Zombie1.Alive = True
+                Zombie2.Alive = True
+                Bat1.Alive = True
+                RoomCompleted = False
+            elif Room == 18:
+                Enemies = 4
+                Room = 19
+                Player.X = 480
+                Player.Y = 450
+                Sword.X = 480
+                Sword.Y = 375
+                Sword.Rotation = 0
+                Zombie1.X = 100
+                Zombie1.Y = 100
+                Zombie2.X = 100
+                Zombie2.Y = 440
+                Bat1.X = 860
+                Bat1.Y = 100
+                Bat2.X = 860
+                Bat2.Y = 440
+                Zombie1.Alive = True
+                Zombie2.Alive = True
+                Bat1.Alive = True
+                Bat2.Alive = True
+                RoomCompleted = False
+            elif Room == 19:
+                Enemies = 0
+                Room = 20
+                Player.X = 480
+                Player.Y = 450
+                Sword.X = 480
+                Sword.Y = 375
+                Sword.Rotation = 0
+                if Player.Health < 3:
+                    Player.Health += 1
+                RoomCompleted = False
+            elif Room == 20:
+                Enemies = 6
+                Room = 21
+                Player.X = 480
+                Player.Y = 450
+                Sword.X = 480
+                Sword.Y = 375
+                Sword.Rotation = 0
+                Demon1.X = 280
+                Demon1.Y = 440
+                Demon2.X = 680
+                Demon2.Y = 440
+                Zombie1.X = 100
+                Zombie1.Y = 100
+                Zombie2.X = 860
+                Zombie2.Y = 100
+                Bat1.X = 75
+                Bat1.Y = 270
+                Bat2.X = 885
+                Bat2.Y = 270
+                Demon1.Alive = True
+                Demon2.Alive = True
+                Zombie1.Alive = True
+                Zombie2.Alive = True
+                Bat1.Alive = True
+                Bat2.Alive = True
+                RoomCompleted = False
+            elif Room == 21:
+                Enemies = 4
+                Room = 22
+                Player.X = 480
+                Player.Y = 450
+                Sword.X = 480
+                Sword.Y = 375
+                Sword.Rotation = 0
+                Demon1.X = 860
+                Demon1.Y = 270
+                Zombie1.X = 100
+                Zombie1.Y = 250
+                Zombie2.X = 100
+                Zombie2.Y = 290
+                Bat1.X = 160
+                Bat1.Y = 270
+                Demon1.Alive = True
+                Zombie1.Alive = True
+                Zombie2.Alive = True
+                Bat1.Alive = True
+                RoomCompleted = False
+            elif Room == 22:
+                Enemies = 6
+                Room = 23
+                Player.X = 480
+                Player.Y = 450
+                Sword.X = 480
+                Sword.Y = 375
+                Sword.Rotation = 0
+                Zombie1.X = 250
+                Zombie1.Y = 150
+                Zombie2.X = 250
+                Zombie2.Y = 390
+                Demon1.X = 100
+                Demon1.Y = 100
+                Demon2.X = 100
+                Demon2.Y = 440
+                Bat1.X = 175
+                Bat1.Y = 170
+                Bat2.X = 175
+                Bat2.Y = 370
+                Zombie1.Alive = True
+                Zombie2.Alive = True
+                Demon1.Alive = True
+                Demon2.Alive = True
+                Bat1.Alive = True
+                Bat2.Alive = True
+                RoomCompleted = False
+            elif Room == 23:
+                Enemies = 6
+                Room = 24
+                Player.X = 480
+                Player.Y = 450
+                Sword.X = 480
+                Sword.Y = 375
+                Sword.Rotation = 0
+                Zombie1.X = 710
+                Zombie1.Y = 150
+                Zombie2.X = 710
+                Zombie2.Y = 390
+                Demon1.X = 860
+                Demon1.Y = 100
+                Demon2.X = 860
+                Demon2.Y = 440
+                Bat1.X = 785
+                Bat1.Y = 170
+                Bat2.X = 785
+                Bat2.Y = 370
+                Zombie1.Alive = True
+                Zombie2.Alive = True
+                Demon1.Alive = True
+                Demon2.Alive = True
+                Bat1.Alive = True
+                Bat2.Alive = True
+                RoomCompleted = False
+            elif Room == 24:
+                Enemies = 6
+                Room = 25
+                Player.X = 480
+                Player.Y = 450
+                Sword.X = 480
+                Sword.Y = 375
+                Sword.Rotation = 0
+                Zombie1.X = 330
+                Zombie1.Y = 450
+                Zombie2.X = 610
+                Zombie2.Y = 450
+                Demon1.X = 100
+                Demon1.Y = 100
+                Demon2.X = 860
+                Demon2.Y = 100
+                Bat1.X = 250
+                Bat1.Y = 270
+                Bat2.X = 710
+                Bat2.Y = 270
+                Zombie1.Alive = True
+                Zombie2.Alive = True
+                Demon1.Alive = True
+                Demon2.Alive = True
+                Bat1.Alive = True
+                Bat2.Alive = True
+                RoomCompleted = False
+            elif Room == 101:
+                Enemies = 6
+                Room = 102
+                Player.X = 480
+                Player.Y = 450
+                Sword.X = 480
+                Sword.Y = 375
+                Sword.Rotation = 0
+                Zombie1.X = 100
+                Zombie1.Y = 100
+                Zombie2.X = 200
+                Zombie2.Y = 100
+                Demon1.X = 100
+                Demon1.Y = 200
+                Demon2.X = 200
+                Demon2.Y = 200
+                Bat1.X = 100
+                Bat1.Y = 300
+                Bat2.X = 200
+                Bat2.Y = 300
+                Zombie1.Alive = True
+                Zombie2.Alive = True
+                Demon1.Alive = True
+                Demon2.Alive = True
+                Bat1.Alive = True
+                Bat2.Alive = True
+                RoomCompleted = False
             else:
                 Enemies = 0
                 Room = 0
@@ -229,6 +623,13 @@ async def Game():
             Demonspawn4.Alive = False
             Demonspawn5.Alive = False
             Demonspawn6.Alive = False
+            Bat1.Alive = False
+            Bat2.Alive = False
+            Player.Health = 3
+            Player.DamageTimer = False
+            Player.DamageTimerStart = 0
+            Player.DamageTimerCurrent = 0
+            Player.DamageTimerElapsed = 0
             if pygame.key.get_pressed()[pygame.K_RETURN]:
                 Player.X = 480
                 Player.Y = 450
@@ -240,6 +641,28 @@ async def Game():
                 RoomCompleted = False
 
         if not Room == 0:
+            if Debug == True:
+                if pygame.key.get_pressed()[pygame.K_o]:
+                    Room += 1
+                    time.sleep(0.025)
+                elif pygame.key.get_pressed()[pygame.K_p]:
+                    Room -= 1
+                    time.sleep(0.025)
+                if pygame.key.get_pressed()[pygame.K_l]:
+                    Enemies = 0
+                if pygame.key.get_pressed()[pygame.K_k]:
+                    Player.Health = 3
+            if Player.DamageTimer == False:
+                Player.DamageTimer = True
+                Player.DamageTimerStart = int(time.time())
+            
+            Player.DamageTimerCurrent = int(time.time())
+            Player.DamageTimerElapsed = Player.DamageTimerCurrent - Player.DamageTimerStart
+            
+            if Player.Health < 0:
+                Player.Health = 0
+            if Player.Health == 0:
+                Room = 0
             if pygame.key.get_pressed()[pygame.K_w]:
                 if not pygame.key.get_pressed()[pygame.K_s]:
                     Player.Y = int(Player.Y - (500 * DeltaTime))
@@ -282,32 +705,34 @@ async def Game():
                     RoomCompleted = True
 
             if pygame.key.get_pressed()[pygame.K_w]:
-                if pygame.key.get_pressed()[pygame.K_a]:
-                    Sword.X = Player.X - 99
-                    Sword.Y = Player.Y - 75
-                    Sword.Rotation = 45
-                elif pygame.key.get_pressed()[pygame.K_d]:
-                    Sword.X = Player.X + 75
-                    Sword.Y = Player.Y - 75
-                    Sword.Rotation = 315
-                else:
-                    Sword.X = Player.X
-                    Sword.Y = Player.Y - 75
-                    Sword.Rotation = 0
+                if not pygame.key.get_pressed()[pygame.K_s]:
+                    if pygame.key.get_pressed()[pygame.K_a]:
+                        Sword.X = Player.X - 99
+                        Sword.Y = Player.Y - 75
+                        Sword.Rotation = 45
+                    elif pygame.key.get_pressed()[pygame.K_d]:
+                        Sword.X = Player.X + 75
+                        Sword.Y = Player.Y - 75
+                        Sword.Rotation = 315
+                    else:
+                        Sword.X = Player.X
+                        Sword.Y = Player.Y - 75
+                        Sword.Rotation = 0
 
             if pygame.key.get_pressed()[pygame.K_s]:
-                if pygame.key.get_pressed()[pygame.K_a]:
-                    Sword.X = Player.X - 99
-                    Sword.Y = Player.Y + 75
-                    Sword.Rotation = 135
-                elif pygame.key.get_pressed()[pygame.K_d]:
-                    Sword.X = Player.X + 75
-                    Sword.Y = Player.Y + 75
-                    Sword.Rotation = 225
-                else:
-                    Sword.X = Player.X
-                    Sword.Y = Player.Y + 75
-                    Sword.Rotation = 180
+                if not pygame.key.get_pressed()[pygame.K_w]:
+                    if pygame.key.get_pressed()[pygame.K_a]:
+                        Sword.X = Player.X - 99
+                        Sword.Y = Player.Y + 75
+                        Sword.Rotation = 135
+                    elif pygame.key.get_pressed()[pygame.K_d]:
+                        Sword.X = Player.X + 75
+                        Sword.Y = Player.Y + 75
+                        Sword.Rotation = 225
+                    else:
+                        Sword.X = Player.X
+                        Sword.Y = Player.Y + 75
+                        Sword.Rotation = 180
 
             if pygame.key.get_pressed()[pygame.K_d]:
                 if not pygame.key.get_pressed()[pygame.K_a]:
@@ -327,39 +752,57 @@ async def Game():
 
             PlayerRect = Player.image.get_rect(center=(Player.X, Player.Y))
             SwordRect = Sword.image.get_rect(center=(Sword.X, Sword.Y))
-            Zombie1Rect = Zombie1.image.get_rect(center=(Zombie1.X, Zombie1.Y))
-            Zombie2Rect = Zombie2.image.get_rect(center=(Zombie2.X, Zombie2.Y))
-            Demon1Rect = Demon1.image.get_rect(center=(Demon1.X, Demon1.Y))
-            Demon2Rect = Demon2.image.get_rect(center=(Demon2.X, Demon2.Y))
+            Zombie1Rect = Zombie1.CurrentFrame.get_rect(center=(Zombie1.X, Zombie1.Y))
+            Zombie2Rect = Zombie2.CurrentFrame.get_rect(center=(Zombie2.X, Zombie2.Y))
+            Demon1Rect = Demon1.CurrentFrame.get_rect(center=(Demon1.X, Demon1.Y))
+            Demon2Rect = Demon2.CurrentFrame.get_rect(center=(Demon2.X, Demon2.Y))
             Demonspawn1Rect = Demonspawn1.image.get_rect(center=(Demonspawn1.X, Demonspawn1.Y))
             Demonspawn2Rect = Demonspawn2.image.get_rect(center=(Demonspawn2.X, Demonspawn2.Y))
             Demonspawn3Rect = Demonspawn3.image.get_rect(center=(Demonspawn3.X, Demonspawn3.Y))
             Demonspawn4Rect = Demonspawn4.image.get_rect(center=(Demonspawn4.X, Demonspawn4.Y))
             Demonspawn5Rect = Demonspawn5.image.get_rect(center=(Demonspawn5.X, Demonspawn5.Y))
             Demonspawn6Rect = Demonspawn6.image.get_rect(center=(Demonspawn6.X, Demonspawn6.Y))
+            Bat1Rect = Bat1.CurrentFrame.get_rect(center=(Bat1.X, Bat1.Y))
+            Bat2Rect = Bat2.CurrentFrame.get_rect(center=(Bat2.X, Bat2.Y))
 
             SwordRotated = pygame.transform.rotate(Sword.image, Sword.Rotation)
 
             if Zombie1.Alive == True:
-                if Zombie1.X < Player.X:
-                    Zombie1.Flipped = False
-                else:
-                    Zombie1.Flipped = True
-                if Zombie1Rect.colliderect(SwordRect):
-                    Zombie1.Alive = False
-                    Enemies = Enemies - 1
-                elif Zombie1Rect.colliderect(PlayerRect):
-                    Room = 0
-                
-                if Zombie1.X < Player.X - 10:
-                    Zombie1.X = int(Zombie1.X + (315 * DeltaTime))
-                elif Zombie1.X > Player.X + 10:
-                    Zombie1.X = int(Zombie1.X - (315 * DeltaTime))
+                Zombie1.AnimFrame += 1
+                if Zombie1.Anim == 0:
+                    if Zombie1.AnimFrame >= len(ZombieAlive):
+                        Zombie1.AnimFrame = 0
+                    else:
+                        Zombie1.CurrentFrame = ZombieAlive[Zombie1.AnimFrame]
+                elif Zombie1.Anim == 1:
+                    if Zombie1.AnimFrame >= len(ZombieDying):
+                        Zombie1.Alive = False
+                        Enemies -= 1
+                    else:
+                        Zombie1.CurrentFrame = ZombieDying[Zombie1.AnimFrame]
 
-                if Zombie1.Y < Player.Y - 10:
-                    Zombie1.Y = int(Zombie1.Y + (315 * DeltaTime))
-                elif Zombie1.Y > Player.Y + 10:
-                    Zombie1.Y = int(Zombie1.Y - (315 * DeltaTime))
+                if Zombie1.Anim == 0:
+                    if Zombie1.X < Player.X:
+                        Zombie1.Flipped = False
+                    else:
+                        Zombie1.Flipped = True
+                    if Zombie1Rect.colliderect(SwordRect):
+                        Zombie1.Anim = 1
+                    elif Zombie1Rect.colliderect(PlayerRect):
+                        if Player.DamageTimerElapsed > 1.99:
+                            Player.DamageTimer = False
+                            Player.DamageTimerElapsed = 0
+                            Player.Health -= 1
+                
+                    if Zombie1.X < Player.X - 10:
+                        Zombie1.X = int(Zombie1.X + (315 * DeltaTime))
+                    elif Zombie1.X > Player.X + 10:
+                        Zombie1.X = int(Zombie1.X - (315 * DeltaTime))
+
+                    if Zombie1.Y < Player.Y - 10:
+                        Zombie1.Y = int(Zombie1.Y + (315 * DeltaTime))
+                    elif Zombie1.Y > Player.Y + 10:
+                        Zombie1.Y = int(Zombie1.Y - (315 * DeltaTime))
                     
                 if Zombie1.X < 66:
                     Zombie1.X = 66
@@ -385,25 +828,41 @@ async def Game():
                     Zombie1.Y = 24
 
             if Zombie2.Alive == True:
-                if Zombie2.X < Player.X:
-                    Zombie2.Flipped = False
-                else:
-                    Zombie2.Flipped = True
-                if Zombie2Rect.colliderect(SwordRect):
-                    Zombie2.Alive = False
-                    Enemies = Enemies - 1
-                elif Zombie2Rect.colliderect(PlayerRect):
-                    Room = 0
-                
-                if Zombie2.X < Player.X - 10:
-                    Zombie2.X = int(Zombie2.X + (315 * DeltaTime))
-                elif Zombie2.X > Player.X + 10:
-                    Zombie2.X = int(Zombie2.X - (315 * DeltaTime))
+                Zombie2.AnimFrame += 1
+                if Zombie2.Anim == 0:
+                    if Zombie2.AnimFrame >= len(ZombieAlive):
+                        Zombie2.AnimFrame = 0
+                    else:
+                        Zombie2.CurrentFrame = ZombieAlive[Zombie2.AnimFrame]
+                elif Zombie2.Anim == 1:
+                    if Zombie2.AnimFrame >= len(ZombieDying):
+                        Zombie2.Alive = False
+                        Enemies -= 1
+                    else:
+                        Zombie2.CurrentFrame = ZombieDying[Zombie2.AnimFrame]
 
-                if Zombie2.Y < Player.Y - 10:
-                    Zombie2.Y = int(Zombie2.Y + (315 * DeltaTime))
-                elif Zombie2.Y > Player.Y + 10:
-                    Zombie2.Y = int(Zombie2.Y - (315 * DeltaTime))
+                if Zombie2.Anim == 0:
+                    if Zombie2.X < Player.X:
+                        Zombie2.Flipped = False
+                    else:
+                        Zombie2.Flipped = True
+                    if Zombie2Rect.colliderect(SwordRect):
+                        Zombie2.Anim = 1
+                    elif Zombie2Rect.colliderect(PlayerRect):
+                        if Player.DamageTimerElapsed > 1.99:
+                            Player.DamageTimer = False
+                            Player.DamageTimerElapsed = 0
+                            Player.Health -= 1
+
+                    if Zombie2.X < Player.X - 10:
+                        Zombie2.X = int(Zombie2.X + (315 * DeltaTime))
+                    elif Zombie2.X > Player.X + 10:
+                        Zombie2.X = int(Zombie2.X - (315 * DeltaTime))
+
+                    if Zombie2.Y < Player.Y - 10:
+                        Zombie2.Y = int(Zombie2.Y + (315 * DeltaTime))
+                    elif Zombie2.Y > Player.Y + 10:
+                        Zombie2.Y = int(Zombie2.Y - (315 * DeltaTime))
                     
                 if Zombie2.X < 66:
                     Zombie2.X = 66
@@ -429,114 +888,148 @@ async def Game():
                     Zombie2.Y = 24
                     
             if Demon1.Alive == True:
-                if Demon1.X > Player.X:
-                    Demon1.Flipped = True
-                else:
-                    Demon1.Flipped = False
+                Demon1.AnimFrame += 1
+                if Demon1.Anim == 0:
+                    if Demon1.AnimFrame >= len(DemonAlive):
+                        Demon1.AnimFrame = 0
+                    else:
+                        Demon1.CurrentFrame = DemonAlive[Demon1.AnimFrame]
+                elif Demon1.Anim == 1:
+                    if Demon1.AnimFrame >= len(DemonDying):
+                        Demon1.Alive = False
+                        Enemies -= 1
+                    else:
+                        Demon1.CurrentFrame = DemonDying[Demon1.AnimFrame]
+                
+                if not Demon1.Anim == 1:
+                    if Demon1.X > Player.X:
+                        Demon1.Flipped = True
+                    else:
+                        Demon1.Flipped = False
                     
-                if Demon1.X < Player.X - 360:
-                    Demon1.X = int(Demon1.X + (125 * DeltaTime))
-                elif Demon1.X > Player.X + 360:
-                    Demon1.X = int(Demon1.X - (125 * DeltaTime))
+                    if Demon1.X < Player.X - 360:
+                        Demon1.X = int(Demon1.X + (125 * DeltaTime))
+                    elif Demon1.X > Player.X + 360:
+                        Demon1.X = int(Demon1.X - (125 * DeltaTime))
 
-                if Demon1.Y < Player.Y - 270:
-                    Demon1.Y = int(Demon1.Y + (125 * DeltaTime))
-                elif Demon1.Y > Player.Y + 270:
-                    Demon1.Y = int(Demon1.Y - (125 * DeltaTime))
+                    if Demon1.Y < Player.Y - 270:
+                        Demon1.Y = int(Demon1.Y + (125 * DeltaTime))
+                    elif Demon1.Y > Player.Y + 270:
+                        Demon1.Y = int(Demon1.Y - (125 * DeltaTime))
                 
-                if Demon1.Timer == False:
-                    Demon1.Timer = True
-                    Demon1.TimerStart = int(time.time())
+                    if Demon1.SpawnTimer == False:
+                        Demon1.SpawnTimer = True
+                        Demon1.SpawnTimerStart = int(time.time())
                 
-                Demon1.TimerCurrent = int(time.time())
+                    Demon1.SpawnTimerCurrent = int(time.time())
                 
-                Demon1.TimerElapsed = Demon1.TimerCurrent - Demon1.TimerStart
+                    Demon1.SpawnTimerElapsed = Demon1.SpawnTimerCurrent - Demon1.SpawnTimerStart
                 
-                if Demon1.TimerElapsed > 0.99:
-                    Demon1.TimerStart = 0
-                    Demon1.TimerCurrent = 0
-                    Demon1.TimerElapsed = 0
-                    Demon1.Timer = False
-                    if Demon1.Spawn == 0:
-                        Enemies = Enemies + 1
-                        Demon1.Spawn = 1
-                        Demonspawn1.X = Demon1.X
-                        Demonspawn1.Y = Demon1.Y
-                        Demonspawn1.Alive = True
-                    elif Demon1.Spawn == 1:
-                        Enemies = Enemies + 1
-                        Demon1.Spawn = 2
-                        Demonspawn2.X = Demon1.X
-                        Demonspawn2.Y = Demon1.Y
-                        Demonspawn2.Alive = True
-                    elif Demon1.Spawn == 2:
-                        Enemies = Enemies + 1
-                        Demon1.Spawn = 3
-                        Demonspawn3.X = Demon1.X
-                        Demonspawn3.Y = Demon1.Y
-                        Demonspawn3.Alive = True
+                    if Demon1.SpawnTimerElapsed > 0.99:
+                        Demon1.SpawnTimerStart = 0
+                        Demon1.SpawnTimerCurrent = 0
+                        Demon1.SpawnTimerElapsed = 0
+                        Demon1.SpawnTimer = False
+                        if Demon1.Spawn == 0:
+                            Enemies = Enemies + 1
+                            Demon1.Spawn = 1
+                            Demonspawn1.X = Demon1.X
+                            Demonspawn1.Y = Demon1.Y
+                            Demonspawn1.Alive = True
+                        elif Demon1.Spawn == 1:
+                            Enemies = Enemies + 1
+                            Demon1.Spawn = 2
+                            Demonspawn2.X = Demon1.X
+                            Demonspawn2.Y = Demon1.Y
+                            Demonspawn2.Alive = True
+                        elif Demon1.Spawn == 2:
+                            Enemies = Enemies + 1
+                            Demon1.Spawn = 3
+                            Demonspawn3.X = Demon1.X
+                            Demonspawn3.Y = Demon1.Y
+                            Demonspawn3.Alive = True
+
+                    if Demon1Rect.colliderect(SwordRect):
+                        if not Demon1.Health == 0:
+                            Demon1.Health -= 1
+                        else:
+                            Demon1.AnimFrame = 0
+                            Demon1.Anim = 1                    
                     
-                if Demon1Rect.colliderect(SwordRect):
-                    Enemies = Enemies - 1
-                    Demon1.Alive = False
-                
-                if Demon1Rect.colliderect(PlayerRect):
-                    Room = 0
-                    
+                    if Demon1.Health == 0:
+                        Demon1.Anim = 1
+
             if Demon2.Alive == True:
-                if Demon2.X > Player.X:
-                    Demon2.Flipped = True
-                else:
-                    Demon2.Flipped = False
+                Demon2.AnimFrame += 1
+                if Demon2.Anim == 0:
+                    if Demon2.AnimFrame >= len(DemonAlive):
+                        Demon2.AnimFrame = 0
+                    else:
+                        Demon2.CurrentFrame = DemonAlive[Demon2.AnimFrame]
+                elif Demon2.Anim == 1:
+                    if Demon2.AnimFrame >= len(DemonDying):
+                        Demon2.Alive = False
+                        Enemies -= 1
+                    else:
+                        Demon2.CurrentFrame = DemonDying[Demon2.AnimFrame]
+                
+                if not Demon2.Anim == 1:
+                    if Demon2.X > Player.X:
+                        Demon2.Flipped = True
+                    else:
+                        Demon2.Flipped = False
                     
-                if Demon2.X < Player.X - 360:
-                    Demon2.X = int(Demon2.X + (125 * DeltaTime))
-                elif Demon2.X > Player.X + 360:
-                    Demon2.X = int(Demon2.X - (125 * DeltaTime))
+                    if Demon2.X < Player.X - 360:
+                        Demon2.X = int(Demon2.X + (125 * DeltaTime))
+                    elif Demon2.X > Player.X + 360:
+                        Demon2.X = int(Demon2.X - (125 * DeltaTime))
 
-                if Demon2.Y < Player.Y - 270:
-                    Demon2.Y = int(Demon2.Y + (125 * DeltaTime))
-                elif Demon2.Y > Player.Y + 270:
-                    Demon2.Y = int(Demon2.Y - (125 * DeltaTime))
+                    if Demon2.Y < Player.Y - 270:
+                        Demon2.Y = int(Demon2.Y + (125 * DeltaTime))
+                    elif Demon2.Y > Player.Y + 270:
+                        Demon2.Y = int(Demon2.Y - (125 * DeltaTime))
                 
-                if Demon2.Timer == False:
-                    Demon2.Timer = True
-                    Demon2.TimerStart = int(time.time())
+                    if Demon2.SpawnTimer == False:
+                        Demon2.SpawnTimer = True
+                        Demon2.SpawnTimerStart = int(time.time())
                 
-                Demon2.TimerCurrent = int(time.time())
+                    Demon2.SpawnTimerCurrent = int(time.time())
                 
-                Demon2.TimerElapsed = Demon2.TimerCurrent - Demon2.TimerStart
+                    Demon2.SpawnTimerElapsed = Demon2.SpawnTimerCurrent - Demon2.SpawnTimerStart
                 
-                if Demon2.TimerElapsed > 0.99:
-                    Demon2.TimerStart = 0
-                    Demon2.TimerCurrent = 0
-                    Demon2.TimerElapsed = 0
-                    Demon2.Timer = False
-                    if Demon2.Spawn == 0:
-                        Enemies = Enemies + 1
-                        Demon2.Spawn = 1
-                        Demonspawn4.X = Demon2.X
-                        Demonspawn4.Y = Demon2.Y
-                        Demonspawn4.Alive = True
-                    elif Demon2.Spawn == 1:
-                        Enemies = Enemies + 1
-                        Demon2.Spawn = 2
-                        Demonspawn5.X = Demon2.X
-                        Demonspawn5.Y = Demon2.Y
-                        Demonspawn5.Alive = True
-                    elif Demon2.Spawn == 2:
-                        Enemies = Enemies + 1
-                        Demon2.Spawn = 3
-                        Demonspawn6.X = Demon2.X
-                        Demonspawn6.Y = Demon2.Y
-                        Demonspawn6.Alive = True
+                    if Demon2.SpawnTimerElapsed > 0.99:
+                        Demon2.SpawnTimerStart = 0
+                        Demon2.SpawnTimerCurrent = 0
+                        Demon2.SpawnTimerElapsed = 0
+                        Demon2.SpawnTimer = False
+                        if Demon2.Spawn == 0:
+                            Enemies = Enemies + 1
+                            Demon2.Spawn = 1
+                            Demonspawn4.X = Demon2.X
+                            Demonspawn4.Y = Demon2.Y
+                            Demonspawn4.Alive = True
+                        elif Demon2.Spawn == 1:
+                            Enemies = Enemies + 1
+                            Demon2.Spawn = 2
+                            Demonspawn5.X = Demon2.X
+                            Demonspawn5.Y = Demon2.Y
+                            Demonspawn5.Alive = True
+                        elif Demon2.Spawn == 2:
+                            Enemies = Enemies + 1
+                            Demon2.Spawn = 3
+                            Demonspawn6.X = Demon2.X
+                            Demonspawn6.Y = Demon2.Y
+                            Demonspawn6.Alive = True
+
+                    if Demon2Rect.colliderect(SwordRect):
+                        if not Demon2.Health == 0:
+                            Demon2.Health -= 1
+                        else:
+                            Demon2.AnimFrame = 0
+                            Demon2.Anim = 1                    
                     
-                if Demon2Rect.colliderect(SwordRect):
-                    Enemies = Enemies - 1
-                    Demon2.Alive = False
-                
-                if Demon2Rect.colliderect(PlayerRect):
-                    Room = 0
+                    if Demon2.Health == 0:
+                        Demon2.Anim = 1
 
             if Demonspawn1.Alive == True:
                 if Demonspawn1.X < Player.X:
@@ -558,8 +1051,13 @@ async def Game():
                     Enemies = Enemies - 1
                     Demonspawn1.Alive = False
                 elif Demonspawn1Rect.colliderect(PlayerRect):
-                    Room = 0
-                    
+                    if Player.DamageTimerElapsed > 1.99:
+                        Player.DamageTimer = False
+                        Player.DamageTimerElapsed = 0
+                        Player.Health -= 1
+                    Enemies -= 1
+                    Demonspawn1.Alive = False
+
             if Demonspawn2.Alive == True:
                 if Demonspawn2.X < Player.X:
                     Demonspawn2.Flipped = False
@@ -580,7 +1078,12 @@ async def Game():
                     Enemies = Enemies - 1
                     Demonspawn2.Alive = False
                 elif Demonspawn2Rect.colliderect(PlayerRect):
-                    Room = 0
+                    if Player.DamageTimerElapsed > 1.99:
+                        Player.DamageTimer = False
+                        Player.DamageTimerElapsed = 0
+                        Player.Health -= 1
+                    Enemies -= 1
+                    Demonspawn2.Alive = False
 
             if Demonspawn3.Alive == True:
                 if Demonspawn3.X < Player.X:
@@ -602,7 +1105,12 @@ async def Game():
                     Enemies = Enemies - 1
                     Demonspawn3.Alive = False
                 elif Demonspawn3Rect.colliderect(PlayerRect):
-                    Room = 0
+                    if Player.DamageTimerElapsed > 1.99:
+                        Player.DamageTimer = False
+                        Player.DamageTimerElapsed = 0
+                        Player.Health -= 1
+                    Enemies -= 1
+                    Demonspawn3.Alive = False
 
             if Demonspawn4.Alive == True:
                 if Demonspawn4.X < Player.X:
@@ -624,8 +1132,13 @@ async def Game():
                     Enemies = Enemies - 1
                     Demonspawn4.Alive = False
                 elif Demonspawn4Rect.colliderect(PlayerRect):
-                    Room = 0
-                    
+                    if Player.DamageTimerElapsed > 1.99:
+                        Player.DamageTimer = False
+                        Player.DamageTimerElapsed = 0
+                        Player.Health -= 1
+                    Enemies -= 1
+                    Demonspawn4.Alive = False
+
             if Demonspawn5.Alive == True:
                 if Demonspawn5.X < Player.X:
                     Demonspawn5.Flipped = False
@@ -646,7 +1159,12 @@ async def Game():
                     Enemies = Enemies - 1
                     Demonspawn5.Alive = False
                 elif Demonspawn5Rect.colliderect(PlayerRect):
-                    Room = 0
+                    if Player.DamageTimerElapsed > 1.99:
+                        Player.DamageTimer = False
+                        Player.DamageTimerElapsed = 0
+                        Player.Health -= 1
+                    Enemies -= 1
+                    Demonspawn5.Alive = False
 
             if Demonspawn6.Alive == True:
                 if Demonspawn6.X < Player.X:
@@ -668,33 +1186,173 @@ async def Game():
                     Enemies = Enemies - 1
                     Demonspawn6.Alive = False
                 elif Demonspawn6Rect.colliderect(PlayerRect):
-                    Room = 0
+                    if Player.DamageTimerElapsed > 1.99:
+                        Player.DamageTimer = False
+                        Player.DamageTimerElapsed = 0
+                        Player.Health -= 1
+                    Enemies -= 1
+                    Demonspawn6.Alive = False
+
+            if Bat1.Alive == True:
+                Bat1.AnimFrame += 1
+                if Bat1.Anim == 0:
+                    if Bat1.AnimFrame >= len(BatAlive):
+                        Bat1.AnimFrame = 0
+                    else:
+                        Bat1.CurrentFrame = BatAlive[Bat1.AnimFrame]
+                elif Bat1.Anim == 1:
+                    if Bat1.AnimFrame >= len(BatHit):
+                        Bat1.Anim = 0
+                    else:
+                        Bat1.CurrentFrame = BatHit[Bat1.AnimFrame]
+                elif Bat1.Anim == 2:
+                    if Bat1.AnimFrame >= len(BatDying):
+                        Bat1.Alive = False
+                        Enemies -= 1
+                    else:
+                        Bat1.CurrentFrame = BatDying[Bat1.AnimFrame]
+                
+                if not Bat1.Anim == 1:
+                    if not Bat1.Anim == 2:
+                        if Bat1.X < Player.X:
+                            Bat1.Flipped = True
+                        else:
+                            Bat1.Flipped = False
+
+                        if Bat1.X < Player.X - 5:
+                            Bat1.X = int(Bat1.X + (250 * DeltaTime))
+                        elif Bat1.X > Player.X + 5:
+                            Bat1.X = int(Bat1.X - (250 * DeltaTime))
+
+                        if Bat1.Y < Player.Y - 5:
+                            Bat1.Y = int(Bat1.Y + (250 * DeltaTime))
+                        elif Bat1.Y > Player.Y + 5:
+                            Bat1.Y = int(Bat1.Y - (250 * DeltaTime))
+
+                    if Bat1.DamageTimer == False:
+                        Bat1.DamageTimer = True
+                        Bat1.DamageTimerStart = int(time.time())
+
+                    Bat1.DamageTimerCurrent = int(time.time())
+                    Bat1.DamageTimerElapsed = Bat1.DamageTimerCurrent - Bat1.DamageTimerStart
+
+                    if Bat1Rect.colliderect(SwordRect):
+                        if Bat1.Anim == 0:
+                            Bat1.DamageTimerElapsed = 0
+                            Bat1.DamageTimerCurrent = 0
+                            Bat1.DamageTimerStart = 0
+                            Bat1.DamageTimer = False
+                            if not Bat1.Health == 0:
+                                Bat1.Health -= 1
+                                Bat1.Anim = 1
+
+                            if Bat1.Health == 0:
+                                Bat1.AnimFrame = 0
+                                Bat1.Anim = 2
+                    elif Bat1Rect.colliderect(PlayerRect):
+                        if Bat1.Anim == 0:
+                            if Player.DamageTimerElapsed > 1.99:
+                                Player.DamageTimer = False
+                                Player.DamageTimerElapsed = 0
+                                Player.Health -= 1
+
+            if Bat2.Alive == True:
+                Bat2.AnimFrame += 1
+                if Bat2.Anim == 0:
+                    if Bat2.AnimFrame >= len(BatAlive):
+                        Bat2.AnimFrame = 0
+                    else:
+                        Bat2.CurrentFrame = BatAlive[Bat2.AnimFrame]
+                elif Bat2.Anim == 1:
+                    if Bat2.AnimFrame >= len(BatHit):
+                        Bat2.Anim = 0
+                    else:
+                        Bat2.CurrentFrame = BatHit[Bat2.AnimFrame]
+                elif Bat2.Anim == 2:
+                    if Bat2.AnimFrame >= len(BatDying):
+                        Bat2.Alive = False
+                        Enemies -= 1
+                    else:
+                        Bat2.CurrentFrame = BatDying[Bat2.AnimFrame]
+                
+                if not Bat2.Anim == 1:
+                    if not Bat2.Anim == 2:
+                        if Bat2.X < Player.X:
+                            Bat2.Flipped = True
+                        else:
+                            Bat2.Flipped = False
+
+                        if Bat2.X < Player.X - 5:
+                            Bat2.X = int(Bat2.X + (250 * DeltaTime))
+                        elif Bat2.X > Player.X + 5:
+                            Bat2.X = int(Bat2.X - (250 * DeltaTime))
+
+                        if Bat2.Y < Player.Y - 5:
+                            Bat2.Y = int(Bat2.Y + (250 * DeltaTime))
+                        elif Bat2.Y > Player.Y + 5:
+                            Bat2.Y = int(Bat2.Y - (250 * DeltaTime))
+
+                    if Bat2.DamageTimer == False:
+                        Bat2.DamageTimer = True
+                        Bat2.DamageTimerStart = int(time.time())
+                    Bat2.DamageTimerCurrent = int(time.time())
+                    Bat2.DamageTimerElapsed = Bat2.DamageTimerCurrent - Bat2.DamageTimerStart
+
+                    if Bat2Rect.colliderect(SwordRect):
+                        if Bat2.Anim == 0:
+                            Bat2.DamageTimerElapsed = 0
+                            Bat2.DamageTimerCurrent = 0
+                            Bat2.DamageTimerStart = 0
+                            Bat2.DamageTimer = False
+                            if not Bat2.Health == 0:
+                                Bat2.Health -= 1
+                                Bat2.Anim = 1
+
+                            if Bat2.Health == 0:
+                                Bat2.AnimFrame = 0
+                                Bat2.Anim = 2
+                    elif Bat2Rect.colliderect(PlayerRect):
+                        if Bat2.Anim == 0:
+                            if Player.DamageTimerElapsed > 1.99:
+                                Player.DamageTimer = False
+                                Player.DamageTimerElapsed = 0
+                                Player.Health -= 1
 
             if Zombie1.Alive == False:
                 Zombie1.X = -100
                 Zombie1.Y = -100
+                Zombie1.Anim = 0
+                Zombie1.AnimFrame = 0
 
             if Zombie2.Alive == False:
                 Zombie2.X = -100
                 Zombie2.Y = -100
+                Zombie2.Anim = 0
+                Zombie2.AnimFrame = 0
                 
             if Demon1.Alive == False:
                 Demon1.Spawn = 0
-                Demon1.Timer = False
-                Demon1.TimerStart = 0
-                Demon1.TimerCurrent = 0
-                Demon1.TimerElapsed = 0
+                Demon1.Health = 1
+                Demon1.SpawnTimer = False
+                Demon1.SpawnTimerStart = 0
+                Demon1.SpawnTimerCurrent = 0
+                Demon1.SpawnTimerElapsed = 0
                 Demon1.X = -100
                 Demon1.Y = -100
+                Demon1.Anim = 0
+                Demon1.AnimFrame = 0
 
             if Demon2.Alive == False:
                 Demon2.Spawn = 0
-                Demon2.Timer = False
-                Demon2.TimerStart = 0
-                Demon2.TimerCurrent = 0
-                Demon2.TimerElapsed = 0
+                Demon2.Health = 1
+                Demon2.SpawnTimer = False
+                Demon2.SpawnTimerStart = 0
+                Demon2.SpawnTimerCurrent = 0
+                Demon2.SpawnTimerElapsed = 0
                 Demon2.X = -100
                 Demon2.Y = -100
+                Demon2.Anim = 0
+                Demon2.AnimFrame = 0
 
             if Demonspawn1.Alive == False:
                 Demonspawn1.X = -100
@@ -720,26 +1378,48 @@ async def Game():
                 Demonspawn6.X = -100
                 Demonspawn6.Y = -100
 
+            if Bat1.Alive == False:
+                Bat1.X = -100
+                Bat1.Y = -100
+                Bat1.Health = 3
+                Bat1.Anim = 0
+                Bat1.AnimFrame = 0
+                Bat1.DamageTimer = False
+                Bat1.DamageTimerStart = 0
+                Bat1.DamageTimerCurrent = 0
+                Bat1.DamageTimerElapsed = 0
+
+            if Bat2.Alive == False:
+                Bat2.X = -100
+                Bat2.Y = -100
+                Bat2.Health = 3
+                Bat2.Anim = 0
+                Bat2.AnimFrame = 0
+                Bat2.DamageTimer = False
+                Bat2.DamageTimerStart = 0
+                Bat2.DamageTimerCurrent = 0
+                Bat2.DamageTimerElapsed = 0
+
             if Player.Flipped == False:
                 PlayerFlipped = pygame.transform.flip(Player.image, False, False)
             elif Player.Flipped == True:
                 PlayerFlipped = pygame.transform.flip(Player.image, True, False)
             if Zombie1.Flipped == False:
-                Zombie1Flipped = pygame.transform.flip(Zombie1.image, False, False)
+                Zombie1Flipped = pygame.transform.flip(Zombie1.CurrentFrame, False, False)
             elif Zombie1.Flipped == True:
-                Zombie1Flipped = pygame.transform.flip(Zombie1.image, True, False)
+                Zombie1Flipped = pygame.transform.flip(Zombie1.CurrentFrame, True, False)
             if Zombie2.Flipped == False:
-                Zombie2Flipped = pygame.transform.flip(Zombie2.image, False, False)
+                Zombie2Flipped = pygame.transform.flip(Zombie2.CurrentFrame, False, False)
             elif Zombie2.Flipped == True:
-                Zombie2Flipped = pygame.transform.flip(Zombie2.image, True, False)
+                Zombie2Flipped = pygame.transform.flip(Zombie2.CurrentFrame, True, False)
             if Demon1.Flipped == False:
-                Demon1Flipped = pygame.transform.flip(Demon1.image, False, False)
+                Demon1Flipped = pygame.transform.flip(Demon1.CurrentFrame, False, False)
             elif Demon1.Flipped == True:
-                Demon1Flipped = pygame.transform.flip(Demon1.image, True, False)
+                Demon1Flipped = pygame.transform.flip(Demon1.CurrentFrame, True, False)
             if Demon2.Flipped == False:
-                Demon2Flipped = pygame.transform.flip(Demon2.image, False, False)
+                Demon2Flipped = pygame.transform.flip(Demon2.CurrentFrame, False, False)
             elif Demon2.Flipped == True:
-                Demon2Flipped = pygame.transform.flip(Demon2.image, True, False)
+                Demon2Flipped = pygame.transform.flip(Demon2.CurrentFrame, True, False)
             if Demonspawn1.Flipped == False:
                 Demonspawn1Flipped = pygame.transform.flip(Demonspawn1.image, False, False)
             elif Demonspawn1.Flipped == True:
@@ -764,6 +1444,14 @@ async def Game():
                 Demonspawn6Flipped = pygame.transform.flip(Demonspawn6.image, False, False)
             elif Demonspawn6.Flipped == True:
                 Demonspawn6Flipped = pygame.transform.flip(Demonspawn6.image, True, False)
+            if Bat1.Flipped == False:
+                Bat1Flipped = pygame.transform.flip(Bat1.CurrentFrame, False, False)
+            elif Bat1.Flipped == True:
+                Bat1Flipped = pygame.transform.flip(Bat1.CurrentFrame, True, False)
+            if Bat2.Flipped == False:
+                Bat2Flipped = pygame.transform.flip(Bat2.CurrentFrame, False, False)
+            elif Bat2.Flipped == True:
+                Bat2Flipped = pygame.transform.flip(Bat2.CurrentFrame, True, False)
 
         Screen.fill((66, 40, 53))
 
@@ -847,6 +1535,20 @@ async def Game():
                 Screen.blit(Demon1Flipped, (Demon1Rect))
             if Demon2.Alive == True:
                 Screen.blit(Demon2Flipped, (Demon2Rect))
+            if Bat1.Alive == True:
+                Screen.blit(Bat1Flipped, (Bat1Rect))
+            if Bat2.Alive == True:
+                Screen.blit(Bat2Flipped, (Bat2Rect))
+            
+            if Player.Health > 2:
+                Screen.blit(PlayerHealth.Image, (800, 450))
+            
+            if Player.Health > 1:
+                Screen.blit(PlayerHealth.Image, (700, 450))
+            
+            if Player.Health > 0:
+                Screen.blit(PlayerHealth.Image, (600, 450))
+            
             Screen.blit(CurrentRoom, (750, 15))
 
         Screen.blit(FPSText, (25, 15))
