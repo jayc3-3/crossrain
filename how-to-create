@@ -6,4 +6,4 @@ Run the "pyinstaller --onefile --name (app_name) --clean --noconsole --icon icon
 Web:
 Have python3 and pygbag installed
 Run the "pyqbag 'path to main.py'" command in the console
-Run "pygbag --package Crossrain --title Crossrain --version (version) --html --build --archive 'path to main.py'" in the console
+Run "pygbag --package Crossrain --title Crossrain --version (version) --build --archive 'path to main.py'" in the console
